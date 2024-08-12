@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BaseOutputPath>..\..\build\coIT.Clockodo.QuickActions</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coIT.Libraries.Clockodo.BusinessRules\coIT.Libraries.Clockodo.BusinessRules.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.Clockodo\coIT.Libraries.Clockodo.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.ConfigurationManager\coIT.Libraries.ConfigurationManager.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.WinForms\coIT.Libraries.WinForms.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="QuickActionSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BaseOutputPath>..\..\build\LexofficeToGdiExport</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />
+    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\coIT.Libraries.Clockodo\coIT.Libraries.Clockodo.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.ConfigurationManager\coIT.Libraries.ConfigurationManager.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.Gdi\coIT.Libraries.Gdi.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.Lexoffice\coIT.Libraries.LexOffice.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.WinForms\coIT.Libraries.WinForms.csproj" />
+  </ItemGroup>
+
+</Project>

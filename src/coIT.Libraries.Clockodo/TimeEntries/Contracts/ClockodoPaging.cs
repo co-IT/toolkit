@@ -1,0 +1,19 @@
+﻿using Newtonsoft.Json;
+
+namespace coIT.Libraries.Clockodo.TimeEntries.Contracts
+{
+    internal class ClockodoPaging
+    {
+        [JsonProperty("items_per_page")]
+        public long ItemsPerPage { get; set; }
+
+        [JsonProperty("current_page")]
+        public long CurrentPage { get; set; }
+
+        [JsonProperty("count_pages")]
+        public long CountPages { get; set; }
+
+        [JsonProperty("count_items")]
+        public long CountItems { get; set; }
+    }
+}
