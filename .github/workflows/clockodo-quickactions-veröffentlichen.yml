@@ -22,7 +22,7 @@ jobs:
       - name: Advanced installer einrichten
         uses: caphyon/advinst-github-action@main
         with:
-          advinst-version: '21.9.0'
+          advinst-version: '21.9'
           advinst-license: ${{ secrets.ADVINST_LICENSE_KEY }}
 
       - name: msbuild zu PATH hinzufügen
@@ -43,4 +43,29 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer-SetupFiles\coIT.Clockodo.QuickActions.Installer.msi
           tag: ${{ github.ref }}
+          overwrite: true
+
+      - name: Update json erstellen
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          # Erste 23 Buchstaben entfernen ("clockodo-quick-actions-")
+          $versionClean = $env:VERSION.Substring(23)
+          
+          # JSON String erstellen
+          $jsonString = '{"RegistryKey":"HKUD\\Software\\\\co-IT.eu GmbH\\Clockodo QuickActions\\Version", "Version":"' + $versionClean + '"}'
+          
+          # Datei erstellen
+          $jsonString | Set-Content -Path advinst_update.json
+          
+          # Dbug Ausgabe
+          Write-Output (Resolve-Path advinst_update.json)
+          Get-Content advinst_update.json
+
+      - name: Update json zu Release hinzufügen
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}\advinst_update.json
+          tag: ${{ github.ref_name }}
           overwrite: true
