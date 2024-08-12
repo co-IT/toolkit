@@ -1,0 +1,46 @@
+name: Clockodo Quickactions bauen und Installer sowie Update erstellen
+
+on:
+  push:
+    tags:
+      - 'clockodo-quick-actions-*'
+
+jobs:
+  clockodo-quickactions-installer-erstellen:
+    runs-on: windows-latest
+    name: ClockodoQuickActions Installer Bauen
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+
+      - name: .NET installieren
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Advanced installer einrichten
+        uses: caphyon/advinst-github-action@main
+        with:
+          advinst-version: '21.9.0'
+          advinst-license: ${{ secrets.ADVINST_LICENSE_KEY }}
+
+      - name: msbuild zu PATH hinzufügen
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Version des neuen Installers festlegen
+        run: AdvancedInstaller.com /edit ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer.aip /SetVersion ("${{ github.ref }}" | cut -c 34-)
+
+      - name: Anwendung bauen
+        run: dotnet publish ${{ github.workspace }}\src\coIT.Clockodo.QuickActions\coIT.Clockodo.QuickActions.csproj /p:PublishProfile="FolderProfile"
+
+      - name: Installer bauen
+        run: msbuild ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer.aiproj
+      
+      - name: Installer zu release hinzufügen
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer-SetupFiles\coIT.Clockodo.QuickActions.Installer.msi
+          tag: ${{ github.ref }}
+          overwrite: true
