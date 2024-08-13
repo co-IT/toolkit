@@ -31,15 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{CB5F52CB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coIT.Libraries.Clockodo.BusinessRules", "coIT.Libraries.Clockodo.BusinessRules\coIT.Libraries.Clockodo.BusinessRules.csproj", "{6135B5B4-A5AF-461E-ADB4-757795EE5877}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installers", "Installers", "{D41A7562-2720-4E2F-978A-C34A3B87538D}"
-EndProject
-Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "coIT.Clockodo.TimeEntriesValidator.Installer", "coIT.Clockodo.TimeEntriesValidator.Installer\coIT.Clockodo.TimeEntriesValidator.Installer.aiproj", "{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}"
-EndProject
-Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "coIT.Lexoffice.GdiExport.Installer", "coIT.Lexoffice.GdiExport.Installer\coIT.Lexoffice.GdiExport.Installer.aiproj", "{256727C6-1191-46DB-A037-6D2132D8825A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coIT.Libraries.Sendgrid", "coIT.Libraries.Sendgrid\coIT.Libraries.Sendgrid.csproj", "{E98A3E62-CC11-4147-A720-71BE62A4728B}"
-EndProject
-Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "coIT.Clockodo.QuickActions.Installer", "coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer.aiproj", "{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "coIT.Libraries.ConfigurationManager", "coIT.Libraries.ConfigurationManager\coIT.Libraries.ConfigurationManager.csproj", "{D58BBF89-A346-4695-BE8B-663936608609}"
 EndProject
@@ -122,30 +114,12 @@ Global
 		{6135B5B4-A5AF-461E-ADB4-757795EE5877}.DefaultBuild|Any CPU.Build.0 = Debug|Any CPU
 		{6135B5B4-A5AF-461E-ADB4-757795EE5877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6135B5B4-A5AF-461E-ADB4-757795EE5877}.Release|Any CPU.Build.0 = Release|Any CPU
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.Debug|Any CPU.ActiveCfg = DefaultBuild
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.Debug|Any CPU.Build.0 = DefaultBuild
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.DefaultBuild|Any CPU.ActiveCfg = DefaultBuild
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.DefaultBuild|Any CPU.Build.0 = DefaultBuild
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.Release|Any CPU.ActiveCfg = DefaultBuild
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB}.Release|Any CPU.Build.0 = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.Debug|Any CPU.ActiveCfg = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.Debug|Any CPU.Build.0 = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.DefaultBuild|Any CPU.ActiveCfg = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.DefaultBuild|Any CPU.Build.0 = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.Release|Any CPU.ActiveCfg = DefaultBuild
-		{256727C6-1191-46DB-A037-6D2132D8825A}.Release|Any CPU.Build.0 = DefaultBuild
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.DefaultBuild|Any CPU.ActiveCfg = Debug|Any CPU
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.DefaultBuild|Any CPU.Build.0 = Debug|Any CPU
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E98A3E62-CC11-4147-A720-71BE62A4728B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.Debug|Any CPU.ActiveCfg = DefaultBuild
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.Debug|Any CPU.Build.0 = DefaultBuild
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.DefaultBuild|Any CPU.ActiveCfg = DefaultBuild
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.DefaultBuild|Any CPU.Build.0 = DefaultBuild
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.Release|Any CPU.ActiveCfg = DefaultBuild
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD}.Release|Any CPU.Build.0 = DefaultBuild
 		{D58BBF89-A346-4695-BE8B-663936608609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D58BBF89-A346-4695-BE8B-663936608609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D58BBF89-A346-4695-BE8B-663936608609}.DefaultBuild|Any CPU.ActiveCfg = Debug|Any CPU
@@ -169,10 +143,7 @@ Global
 		{84ED1BD0-6D4F-4360-82E1-31DCC8587EAC} = {CB5F52CB-42A7-42B3-B6EE-1C3A6A9AD295}
 		{EFA17209-7AED-4AF9-8393-96F9A5BCE7D9} = {7634055D-3512-4025-8E1B-1E6B4490C213}
 		{6135B5B4-A5AF-461E-ADB4-757795EE5877} = {7634055D-3512-4025-8E1B-1E6B4490C213}
-		{118A7C39-EB46-4BEC-8FBB-B37C51B922DB} = {D41A7562-2720-4E2F-978A-C34A3B87538D}
-		{256727C6-1191-46DB-A037-6D2132D8825A} = {D41A7562-2720-4E2F-978A-C34A3B87538D}
 		{E98A3E62-CC11-4147-A720-71BE62A4728B} = {7634055D-3512-4025-8E1B-1E6B4490C213}
-		{20FCB3A9-028D-4827-B11C-B02FE0F9A7BD} = {D41A7562-2720-4E2F-978A-C34A3B87538D}
 		{D58BBF89-A346-4695-BE8B-663936608609} = {7634055D-3512-4025-8E1B-1E6B4490C213}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
