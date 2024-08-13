@@ -28,6 +28,7 @@ namespace coIT.Clockodo.QuickActions
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             tbpEinstellungen = new TabPage();
             groupBox4 = new GroupBox();
             label6 = new Label();
@@ -442,6 +443,7 @@ namespace coIT.Clockodo.QuickActions
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1293, 726);
             Controls.Add(tbcForms);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormMain";
             Text = "co-IT.eu GmbH | Clockodo Quick Actions";
             Load += FormMain_Load;
