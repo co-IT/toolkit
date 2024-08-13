@@ -36,6 +36,8 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
     <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="winx86_Dir" Directory_Parent="APPDIR" DefaultDir="COITCL~1.QUI|coIT.Clockodo.QuickActions"/>
   </COMPONENT>
@@ -225,6 +227,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
     <ROW Shortcut="coIT.Clockodo.QuickActions" Directory_="DesktopFolder" Name="CO-ITQ~1|co-IT QuickActions" Component_="coIT.Clockodo.QuickActions.exe" Target="[#coIT.Clockodo.QuickActions.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="winx86_Dir"/>
+    <ROW Shortcut="coIT.Clockodo.QuickActions_1" Directory_="StartMenuFolder" Name="CO-ITQ~1|co-IT QuickActions" Component_="coIT.Clockodo.QuickActions.exe" Target="[#coIT.Clockodo.QuickActions.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="winx86_Dir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
