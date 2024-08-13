@@ -12,10 +12,12 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://github.com/co-IT/toolkit"/>
     <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/co-IT/toolkit"/>
     <ROW Property="AiSkipExitDlg" Value="1"/>
+    <ROW Property="BannerBitmap" Value="banner.jpg" MultiBuildValue="DefaultBuild:installer_banner.jpg" Type="1" MsiKey="BannerBitmap"/>
     <ROW Property="CTRLS" Value="2"/>
+    <ROW Property="DialogBitmap" Value="dialog.jpg" MultiBuildValue="DefaultBuild:installer_dialog.jpg" Type="1" MsiKey="DialogBitmap"/>
     <ROW Property="Manufacturer" Value="co-IT.eu GmbH"/>
     <ROW Property="ProductCode" Value="1033:{7A73083A-0F69-416D-AE8F-598B8DBB9DBA} " Type="16"/>
-    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductLanguage" Value="1031"/>
     <ROW Property="ProductName" Value="Clockodo QuickActions"/>
     <ROW Property="ProductVersion" Value="0.0.1" Options="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
@@ -104,6 +106,8 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
     <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+    <ROW Name="installer_banner.jpg" SourcePath="..\..\build\coIT.Clockodo.QuickActions\Release\net7.0-windows\publish\win-x86\img\installer_banner.jpg"/>
+    <ROW Name="installer_dialog.jpg" SourcePath="..\..\build\coIT.Clockodo.QuickActions\Release\net7.0-windows\publish\win-x86\img\installer_dialog.jpg"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiControlComponent">
     <ROW Dialog_="WelcomeDlg" Control="WelcomeDlgDialogInitializer" Type="DialogInitializer" X="0" Y="0" Width="0" Height="0" Attributes="0" Order="-1" TextLocId="-" HelpLocId="-" ExtDataLocId="-"/>
