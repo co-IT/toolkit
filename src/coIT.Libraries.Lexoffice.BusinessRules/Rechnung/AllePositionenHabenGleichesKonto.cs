@@ -1,7 +1,8 @@
-﻿using coIT.Libraries.LexOffice.DataContracts.Invoice;
+using coIT.Libraries.LexOffice;
+using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
-namespace coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung
+namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
 {
     internal class AllePositionenHabenGleichesKonto : IchPrüfe<Invoice>
     {

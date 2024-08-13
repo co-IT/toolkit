@@ -80,7 +80,7 @@ public partial class FormMain : Form
     private void TabStatusSetzen(bool status, bool settingsAuchBlockieren = false)
     {
         tbpErfassen.Enabled = status;
-        tbpSelbstkontrolle.Enabled = status;
+        tbpClockodo.Enabled = status;
 
         if (settingsAuchBlockieren)
             tbpEinstellungen.Enabled = status;
@@ -241,7 +241,7 @@ public partial class FormMain : Form
             MessageBoxIcon.Information
         );
 
-        tbcForms.SelectedTab = tbpSelbstkontrolle;
+        tbcForms.SelectedTab = tbpClockodo;
 
         await LoadUserAccountInformation();
         TabStatusSetzen(true);

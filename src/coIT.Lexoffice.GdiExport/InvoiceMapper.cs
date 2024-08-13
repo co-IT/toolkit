@@ -1,9 +1,10 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using coIT.Lexoffice.GdiExport.Kundenstamm;
 using coIT.Lexoffice.GdiExport.Mitarbeiterliste;
-using coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung;
 using coIT.Lexoffice.GdiExport.Umsatzkonten;
 using coIT.Libraries.Gdi.Accounting.Contracts;
+using coIT.Libraries.Lexoffice.BusinessRules.Rechnung;
+using coIT.Libraries.LexOffice;
 using CSharpFunctionalExtensions;
 using GdiInvoice = coIT.Libraries.Gdi.Accounting.Contracts.Invoice;
 using LexofficeInvoice = coIT.Libraries.LexOffice.DataContracts.Invoice.Invoice;

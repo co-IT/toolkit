@@ -1,8 +1,8 @@
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 
-namespace coIT.Lexoffice.GdiExport
+namespace coIT.Libraries.LexOffice
 {
-    internal static class LexOfficeInvoiceExtension
+    public static class LexOfficeInvoiceExtension
     {
         public static int KontoErmitteln(this Invoice rechnung)
         {

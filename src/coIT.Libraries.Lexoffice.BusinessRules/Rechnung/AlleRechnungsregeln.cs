@@ -1,12 +1,12 @@
-﻿using System.Collections.Immutable;
-using coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung.Leistungsempfänger;
-using coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung.Zeile;
+using System.Collections.Immutable;
+using coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger;
+using coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
-namespace coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung
+namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
 {
-    internal class AlleRechnungsregeln : IchPrüfe<Invoice>
+    public class AlleRechnungsregeln : IchPrüfe<Invoice>
     {
         private readonly AlleRechnungszeilenRegeln _rechungszeileRegeln;
         private readonly AllePositionenHabenGleichesKonto _allePositionenHabenGleichesKonto;

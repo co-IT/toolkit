@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
-namespace coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung.Leistungsempfänger
+namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
 {
     internal class LeistungsEmpfängerExistiert : IchPrüfe<Invoice>
     {

@@ -30,17 +30,21 @@ namespace coIT.Clockodo.QuickActions
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             tbpEinstellungen = new TabPage();
-            groupBox4 = new GroupBox();
-            label6 = new Label();
-            label5 = new Label();
-            label3 = new Label();
-            linkLabel1 = new LinkLabel();
-            label1 = new Label();
+            groupBox5 = new GroupBox();
+            groupBox6 = new GroupBox();
+            groupBox7 = new GroupBox();
+            textBox1 = new TextBox();
+            gbxClockodoSettings = new GroupBox();
             groupBox3 = new GroupBox();
             groupBox1 = new GroupBox();
             ctrl_EmailAdresse = new TextBox();
             groupBox2 = new GroupBox();
             ctrl_ApiToken = new TextBox();
+            groupBox4 = new GroupBox();
+            label5 = new Label();
+            label3 = new Label();
+            linkLabel1 = new LinkLabel();
+            label1 = new Label();
             ctrl_EinstellungenSpeichern = new Button();
             tbpErfassen = new TabPage();
             splitContainer1 = new SplitContainer();
@@ -50,7 +54,11 @@ namespace coIT.Clockodo.QuickActions
             ctrl_LadeDaten = new Button();
             ctrl_Zeiteintraege = new DataGridView();
             tbcForms = new TabControl();
-            tbpSelbstkontrolle = new TabPage();
+            tbpClockodo = new TabPage();
+            tbcClockodo = new TabControl();
+            tbpClockodoSelbstkontrolle = new TabPage();
+            dgvClockodoFehler = new DataGridView();
+            btnFehlerAktualisieren = new Button();
             gbxZeitraumSchnellauswahl = new GroupBox();
             btnLetzteZweiWochenVormonat = new Button();
             btnLetzterMonat = new Button();
@@ -60,13 +68,17 @@ namespace coIT.Clockodo.QuickActions
             dtpZeitraumEnde = new DateTimePicker();
             lblEnde = new Label();
             dtpZeitraumStart = new DateTimePicker();
-            btnFehlerAktualisieren = new Button();
-            dgvClockodoFehler = new DataGridView();
+            tbpLexoffice = new TabPage();
+            lexofficeTabControl1 = new Lexoffice.LexofficeTabControl();
             tbpEinstellungen.SuspendLayout();
-            groupBox4.SuspendLayout();
+            groupBox5.SuspendLayout();
+            groupBox6.SuspendLayout();
+            groupBox7.SuspendLayout();
+            gbxClockodoSettings.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            groupBox4.SuspendLayout();
             tbpErfassen.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -74,16 +86,20 @@ namespace coIT.Clockodo.QuickActions
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ctrl_Zeiteintraege).BeginInit();
             tbcForms.SuspendLayout();
-            tbpSelbstkontrolle.SuspendLayout();
+            tbpClockodo.SuspendLayout();
+            tbcClockodo.SuspendLayout();
+            tbpClockodoSelbstkontrolle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvClockodoFehler).BeginInit();
             gbxZeitraumSchnellauswahl.SuspendLayout();
             gbxZeitraum.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvClockodoFehler).BeginInit();
+            tbpLexoffice.SuspendLayout();
             SuspendLayout();
             // 
             // tbpEinstellungen
             // 
-            tbpEinstellungen.Controls.Add(groupBox4);
-            tbpEinstellungen.Controls.Add(groupBox3);
+            tbpEinstellungen.Controls.Add(groupBox5);
+            tbpEinstellungen.Controls.Add(gbxClockodoSettings);
+            tbpEinstellungen.Controls.Add(ctrl_EinstellungenSpeichern);
             tbpEinstellungen.Location = new Point(4, 32);
             tbpEinstellungen.Name = "tbpEinstellungen";
             tbpEinstellungen.Padding = new Padding(3);
@@ -92,75 +108,61 @@ namespace coIT.Clockodo.QuickActions
             tbpEinstellungen.Text = "Einstellungen";
             tbpEinstellungen.UseVisualStyleBackColor = true;
             // 
-            // groupBox4
+            // groupBox5
             // 
-            groupBox4.Controls.Add(label6);
-            groupBox4.Controls.Add(label5);
-            groupBox4.Controls.Add(label3);
-            groupBox4.Controls.Add(linkLabel1);
-            groupBox4.Controls.Add(label1);
-            groupBox4.Location = new Point(408, 17);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(699, 296);
-            groupBox4.TabIndex = 10;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Anleitung";
+            groupBox5.Controls.Add(groupBox6);
+            groupBox5.Location = new Point(6, 296);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(1151, 206);
+            groupBox5.TabIndex = 12;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Lexoffice";
             // 
-            // label6
+            // groupBox6
             // 
-            label6.AutoSize = true;
-            label6.Location = new Point(13, 182);
-            label6.Name = "label6";
-            label6.Size = new Size(596, 25);
-            label6.TabIndex = 6;
-            label6.Text = "4. Klicke auf \"Einstellungen speichern\" um die Konfiguration abzuschließen";
+            groupBox6.Controls.Add(groupBox7);
+            groupBox6.Location = new Point(20, 45);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(386, 140);
+            groupBox6.TabIndex = 10;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Zugänge konfigurieren";
             // 
-            // label5
+            // groupBox7
             // 
-            label5.AutoSize = true;
-            label5.Location = new Point(13, 146);
-            label5.Name = "label5";
-            label5.Size = new Size(447, 25);
-            label5.TabIndex = 5;
-            label5.Text = "3. Füge den Api-Key Links in der Konfiguration links ein";
+            groupBox7.Controls.Add(textBox1);
+            groupBox7.Location = new Point(25, 46);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(315, 66);
+            groupBox7.TabIndex = 7;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "Lexoffice Api Token";
             // 
-            // label3
+            // textBox1
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(13, 110);
-            label3.Name = "label3";
-            label3.Size = new Size(454, 25);
-            label3.TabIndex = 3;
-            label3.Text = "2. Füge die E-Mail-Adresse in der Konfiguration links ein";
+            textBox1.Location = new Point(6, 30);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(303, 31);
+            textBox1.TabIndex = 6;
             // 
-            // linkLabel1
+            // gbxClockodoSettings
             // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.Location = new Point(41, 73);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(358, 25);
-            linkLabel1.TabIndex = 1;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "https://my.clockodo.com/de/users/editself/";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(20, 38);
-            label1.Name = "label1";
-            label1.Size = new Size(636, 25);
-            label1.TabIndex = 0;
-            label1.Text = "1. Öffne den folgenden Link um zu deinen Clockodo Einstellungen zu gelangen";
+            gbxClockodoSettings.Controls.Add(groupBox3);
+            gbxClockodoSettings.Controls.Add(groupBox4);
+            gbxClockodoSettings.Location = new Point(6, 6);
+            gbxClockodoSettings.Name = "gbxClockodoSettings";
+            gbxClockodoSettings.Size = new Size(1151, 284);
+            gbxClockodoSettings.TabIndex = 11;
+            gbxClockodoSettings.TabStop = false;
+            gbxClockodoSettings.Text = "Clockodo";
             // 
             // groupBox3
             // 
             groupBox3.Controls.Add(groupBox1);
             groupBox3.Controls.Add(groupBox2);
-            groupBox3.Controls.Add(ctrl_EinstellungenSpeichern);
-            groupBox3.Location = new Point(16, 17);
+            groupBox3.Location = new Point(20, 42);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(386, 296);
+            groupBox3.Size = new Size(386, 221);
             groupBox3.TabIndex = 9;
             groupBox3.TabStop = false;
             groupBox3.Text = "Zugänge konfigurieren";
@@ -200,10 +202,61 @@ namespace coIT.Clockodo.QuickActions
             ctrl_ApiToken.TabIndex = 6;
             ctrl_ApiToken.UseSystemPasswordChar = true;
             // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(label5);
+            groupBox4.Controls.Add(label3);
+            groupBox4.Controls.Add(linkLabel1);
+            groupBox4.Controls.Add(label1);
+            groupBox4.Location = new Point(423, 42);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(699, 221);
+            groupBox4.TabIndex = 10;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Anleitung";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(13, 168);
+            label5.Name = "label5";
+            label5.Size = new Size(447, 25);
+            label5.TabIndex = 5;
+            label5.Text = "3. Füge den Api-Key Links in der Konfiguration links ein";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(13, 122);
+            label3.Name = "label3";
+            label3.Size = new Size(454, 25);
+            label3.TabIndex = 3;
+            label3.Text = "2. Füge die E-Mail-Adresse in der Konfiguration links ein";
+            // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(41, 73);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(358, 25);
+            linkLabel1.TabIndex = 1;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "https://my.clockodo.com/de/users/editself/";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(13, 38);
+            label1.Name = "label1";
+            label1.Size = new Size(636, 25);
+            label1.TabIndex = 0;
+            label1.Text = "1. Öffne den folgenden Link um zu deinen Clockodo Einstellungen zu gelangen";
+            // 
             // ctrl_EinstellungenSpeichern
             // 
             ctrl_EinstellungenSpeichern.BackColor = Color.FromArgb(255, 192, 128);
-            ctrl_EinstellungenSpeichern.Location = new Point(62, 227);
+            ctrl_EinstellungenSpeichern.Location = new Point(910, 539);
             ctrl_EinstellungenSpeichern.Name = "ctrl_EinstellungenSpeichern";
             ctrl_EinstellungenSpeichern.Size = new Size(247, 57);
             ctrl_EinstellungenSpeichern.TabIndex = 5;
@@ -291,7 +344,6 @@ namespace coIT.Clockodo.QuickActions
             ctrl_Zeiteintraege.Dock = DockStyle.Fill;
             ctrl_Zeiteintraege.Location = new Point(0, 0);
             ctrl_Zeiteintraege.Name = "ctrl_Zeiteintraege";
-            ctrl_Zeiteintraege.RowTemplate.Height = 25;
             ctrl_Zeiteintraege.Size = new Size(1273, 565);
             ctrl_Zeiteintraege.TabIndex = 0;
             ctrl_Zeiteintraege.CellDoubleClick += ctrl_Zeiteintraege_CellDoubleClick;
@@ -300,36 +352,79 @@ namespace coIT.Clockodo.QuickActions
             // tbcForms
             // 
             tbcForms.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tbcForms.Controls.Add(tbpSelbstkontrolle);
+            tbcForms.Controls.Add(tbpClockodo);
+            tbcForms.Controls.Add(tbpLexoffice);
             tbcForms.Controls.Add(tbpErfassen);
             tbcForms.Controls.Add(tbpEinstellungen);
-            tbcForms.Font = new Font("Segoe UI", 13F, FontStyle.Regular, GraphicsUnit.Point);
+            tbcForms.Font = new Font("Segoe UI", 13F);
             tbcForms.Location = new Point(2, 9);
             tbcForms.Name = "tbcForms";
             tbcForms.SelectedIndex = 0;
             tbcForms.Size = new Size(1287, 705);
             tbcForms.TabIndex = 5;
             // 
-            // tbpSelbstkontrolle
+            // tbpClockodo
             // 
-            tbpSelbstkontrolle.Controls.Add(gbxZeitraumSchnellauswahl);
-            tbpSelbstkontrolle.Controls.Add(gbxZeitraum);
-            tbpSelbstkontrolle.Controls.Add(btnFehlerAktualisieren);
-            tbpSelbstkontrolle.Controls.Add(dgvClockodoFehler);
-            tbpSelbstkontrolle.Location = new Point(4, 32);
-            tbpSelbstkontrolle.Name = "tbpSelbstkontrolle";
-            tbpSelbstkontrolle.Padding = new Padding(3);
-            tbpSelbstkontrolle.Size = new Size(1279, 669);
-            tbpSelbstkontrolle.TabIndex = 2;
-            tbpSelbstkontrolle.Text = "Selbstkontrolle";
-            tbpSelbstkontrolle.UseVisualStyleBackColor = true;
+            tbpClockodo.Controls.Add(tbcClockodo);
+            tbpClockodo.Location = new Point(4, 32);
+            tbpClockodo.Name = "tbpClockodo";
+            tbpClockodo.Padding = new Padding(3);
+            tbpClockodo.Size = new Size(1279, 669);
+            tbpClockodo.TabIndex = 2;
+            tbpClockodo.Text = "Clockodo";
+            tbpClockodo.UseVisualStyleBackColor = true;
+            // 
+            // tbcClockodo
+            // 
+            tbcClockodo.Controls.Add(tbpClockodoSelbstkontrolle);
+            tbcClockodo.Dock = DockStyle.Fill;
+            tbcClockodo.Location = new Point(3, 3);
+            tbcClockodo.Name = "tbcClockodo";
+            tbcClockodo.SelectedIndex = 0;
+            tbcClockodo.Size = new Size(1273, 663);
+            tbcClockodo.TabIndex = 9;
+            // 
+            // tbpClockodoSelbstkontrolle
+            // 
+            tbpClockodoSelbstkontrolle.Controls.Add(dgvClockodoFehler);
+            tbpClockodoSelbstkontrolle.Controls.Add(btnFehlerAktualisieren);
+            tbpClockodoSelbstkontrolle.Controls.Add(gbxZeitraumSchnellauswahl);
+            tbpClockodoSelbstkontrolle.Controls.Add(gbxZeitraum);
+            tbpClockodoSelbstkontrolle.Location = new Point(4, 32);
+            tbpClockodoSelbstkontrolle.Name = "tbpClockodoSelbstkontrolle";
+            tbpClockodoSelbstkontrolle.Padding = new Padding(3);
+            tbpClockodoSelbstkontrolle.Size = new Size(1265, 627);
+            tbpClockodoSelbstkontrolle.TabIndex = 0;
+            tbpClockodoSelbstkontrolle.Text = "Selbstkontrolle";
+            tbpClockodoSelbstkontrolle.UseVisualStyleBackColor = true;
+            // 
+            // dgvClockodoFehler
+            // 
+            dgvClockodoFehler.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvClockodoFehler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvClockodoFehler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvClockodoFehler.Location = new Point(0, 129);
+            dgvClockodoFehler.Name = "dgvClockodoFehler";
+            dgvClockodoFehler.Size = new Size(1265, 498);
+            dgvClockodoFehler.TabIndex = 0;
+            dgvClockodoFehler.CellDoubleClick += dgvClockodoFehler_CellDoubleClick;
+            // 
+            // btnFehlerAktualisieren
+            // 
+            btnFehlerAktualisieren.Location = new Point(799, 14);
+            btnFehlerAktualisieren.Name = "btnFehlerAktualisieren";
+            btnFehlerAktualisieren.Size = new Size(138, 109);
+            btnFehlerAktualisieren.TabIndex = 1;
+            btnFehlerAktualisieren.Text = "Aktualisieren";
+            btnFehlerAktualisieren.UseVisualStyleBackColor = true;
+            btnFehlerAktualisieren.Click += btnFehlerAktualisiere_click;
             // 
             // gbxZeitraumSchnellauswahl
             // 
             gbxZeitraumSchnellauswahl.Controls.Add(btnLetzteZweiWochenVormonat);
             gbxZeitraumSchnellauswahl.Controls.Add(btnLetzterMonat);
             gbxZeitraumSchnellauswahl.Controls.Add(btnErsteZweiWochenAktuellerMonat);
-            gbxZeitraumSchnellauswahl.Location = new Point(408, 6);
+            gbxZeitraumSchnellauswahl.Location = new Point(408, 3);
             gbxZeitraumSchnellauswahl.Name = "gbxZeitraumSchnellauswahl";
             gbxZeitraumSchnellauswahl.Size = new Size(385, 120);
             gbxZeitraumSchnellauswahl.TabIndex = 8;
@@ -372,7 +467,7 @@ namespace coIT.Clockodo.QuickActions
             gbxZeitraum.Controls.Add(dtpZeitraumEnde);
             gbxZeitraum.Controls.Add(lblEnde);
             gbxZeitraum.Controls.Add(dtpZeitraumStart);
-            gbxZeitraum.Location = new Point(6, 6);
+            gbxZeitraum.Location = new Point(6, 3);
             gbxZeitraum.Name = "gbxZeitraum";
             gbxZeitraum.Size = new Size(396, 120);
             gbxZeitraum.TabIndex = 7;
@@ -415,27 +510,24 @@ namespace coIT.Clockodo.QuickActions
             dtpZeitraumStart.TabIndex = 3;
             dtpZeitraumStart.ValueChanged += dtpZeitraumStart_ValueChanged;
             // 
-            // btnFehlerAktualisieren
+            // tbpLexoffice
             // 
-            btnFehlerAktualisieren.Location = new Point(799, 17);
-            btnFehlerAktualisieren.Name = "btnFehlerAktualisieren";
-            btnFehlerAktualisieren.Size = new Size(138, 109);
-            btnFehlerAktualisieren.TabIndex = 1;
-            btnFehlerAktualisieren.Text = "Aktualisieren";
-            btnFehlerAktualisieren.UseVisualStyleBackColor = true;
-            btnFehlerAktualisieren.Click += btnFehlerAktualisiere_click;
+            tbpLexoffice.Controls.Add(lexofficeTabControl1);
+            tbpLexoffice.Location = new Point(4, 32);
+            tbpLexoffice.Name = "tbpLexoffice";
+            tbpLexoffice.Padding = new Padding(3);
+            tbpLexoffice.Size = new Size(1279, 669);
+            tbpLexoffice.TabIndex = 3;
+            tbpLexoffice.Text = "Lexoffice";
+            tbpLexoffice.UseVisualStyleBackColor = true;
             // 
-            // dgvClockodoFehler
+            // lexofficeTabControl1
             // 
-            dgvClockodoFehler.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvClockodoFehler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvClockodoFehler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvClockodoFehler.Location = new Point(3, 132);
-            dgvClockodoFehler.Name = "dgvClockodoFehler";
-            dgvClockodoFehler.RowTemplate.Height = 25;
-            dgvClockodoFehler.Size = new Size(1273, 534);
-            dgvClockodoFehler.TabIndex = 0;
-            dgvClockodoFehler.CellDoubleClick += dgvClockodoFehler_CellDoubleClick;
+            lexofficeTabControl1.Dock = DockStyle.Fill;
+            lexofficeTabControl1.Location = new Point(3, 3);
+            lexofficeTabControl1.Name = "lexofficeTabControl1";
+            lexofficeTabControl1.Size = new Size(1273, 663);
+            lexofficeTabControl1.TabIndex = 0;
             // 
             // FormMain
             // 
@@ -448,13 +540,18 @@ namespace coIT.Clockodo.QuickActions
             Text = "co-IT.eu GmbH | Clockodo Quick Actions";
             Load += FormMain_Load;
             tbpEinstellungen.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
-            groupBox4.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox6.ResumeLayout(false);
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
+            gbxClockodoSettings.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             tbpErfassen.ResumeLayout(false);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -463,11 +560,14 @@ namespace coIT.Clockodo.QuickActions
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ctrl_Zeiteintraege).EndInit();
             tbcForms.ResumeLayout(false);
-            tbpSelbstkontrolle.ResumeLayout(false);
+            tbpClockodo.ResumeLayout(false);
+            tbcClockodo.ResumeLayout(false);
+            tbpClockodoSelbstkontrolle.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvClockodoFehler).EndInit();
             gbxZeitraumSchnellauswahl.ResumeLayout(false);
             gbxZeitraum.ResumeLayout(false);
             gbxZeitraum.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvClockodoFehler).EndInit();
+            tbpLexoffice.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -487,7 +587,7 @@ namespace coIT.Clockodo.QuickActions
         private TabControl tbcForms;
         private TextBox ctrl_textboxLaufenderEintrag;
         private Button ctrl_laufendeUhrAbfrage;
-        private TabPage tbpSelbstkontrolle;
+        private TabPage tbpClockodo;
         private DataGridView dgvClockodoFehler;
         private Button btnFehlerAktualisieren;
         private DateTimePicker dateTimePicker2;
@@ -504,8 +604,16 @@ namespace coIT.Clockodo.QuickActions
         private GroupBox groupBox4;
         private LinkLabel linkLabel1;
         private Label label1;
-        private Label label6;
         private Label label5;
         private Label label3;
+        private TabPage tbpLexoffice;
+        private TabControl tbcClockodo;
+        private TabPage tbpClockodoSelbstkontrolle;
+        private GroupBox gbxClockodoSettings;
+        private GroupBox groupBox5;
+        private GroupBox groupBox6;
+        private GroupBox groupBox7;
+        private TextBox textBox1;
+        private Lexoffice.LexofficeTabControl lexofficeTabControl1;
     }
 }

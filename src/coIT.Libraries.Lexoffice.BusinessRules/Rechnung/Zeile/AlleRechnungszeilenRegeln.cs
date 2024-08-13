@@ -1,8 +1,8 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
-namespace coIT.Lexoffice.GdiExport.Prüfregeln.Rechnung.Zeile
+namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
 {
     internal class AlleRechnungszeilenRegeln : IchPrüfe<InvoiceLineItem>
     {
