@@ -32,7 +32,7 @@ jobs:
         run: AdvancedInstaller.com /edit ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer.aip /SetVersion ("${{ github.ref }}" | cut -c 34-)
 
       - name: Anwendung bauen
-        run: dotnet publish ${{ github.workspace }}\src\coIT.Clockodo.QuickActions\coIT.Clockodo.QuickActions.csproj /p:PublishProfile="FolderProfile"
+        run: dotnet publish -c Release ${{ github.workspace }}\src\coIT.Clockodo.QuickActions\coIT.Clockodo.QuickActions.csproj /p:PublishProfile="FolderProfile"
 
       - name: Installer bauen
         run: msbuild ${{ github.workspace }}\src\coIT.Clockodo.QuickActions.Installer\coIT.Clockodo.QuickActions.Installer.aiproj
