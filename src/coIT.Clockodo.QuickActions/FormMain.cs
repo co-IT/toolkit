@@ -1,15 +1,12 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Text;
-using System.Windows.Forms;
+using coIT.Clockodo.QuickActions.Einstellungen;
 using coIT.Libraries.Clockodo.Account;
 using coIT.Libraries.Clockodo.Account.Contracts;
 using coIT.Libraries.Clockodo.BusinessRules;
 using coIT.Libraries.Clockodo.Clock;
 using coIT.Libraries.Clockodo.TimeEntries;
-using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 using coIT.Libraries.ConfigurationManager;
-using coIT.Libraries.ConfigurationManager.Cryptography;
 using coIT.Libraries.WinForms;
 using coIT.Libraries.WinForms.DateTimeButtons;
 
@@ -18,46 +15,53 @@ namespace coIT.Clockodo.QuickActions;
 public partial class FormMain : Form
 {
     private AccountInformation _accountInformation;
-    private QuickActionSettings _settings;
-    private EnvironmentManager _environmentManager;
+    private ClockodoEinstellungen _clockodoSettings;
+    private LexofficeKonfiguration _lexofficeKonfiguration;
 
     public FormMain()
     {
         InitializeComponent();
+
         dgvClockodoFehler.CellFormatting += dgvClockodoFehler_CellFormatting;
-
-        _settings = new QuickActionSettings();
-        var key =
-            "eyJJdGVtMSI6IlZSZG1iaEJEVnF6U0swbTBHYjBEUFREdWU5c01sSmNNeURwOE1qb1VKTjg9IiwiSXRlbTIiOiJubE00WEJsTkZGTWFDVFd3Si9EdEZRPT0ifQ==";
-        var aesCryptography = AesCryptographyService.FromKey(key).Value;
-        var jsonSerializer = new Libraries.ConfigurationManager.Serialization.JsonSerializer();
-
-        _environmentManager = new EnvironmentManager(aesCryptography, jsonSerializer);
     }
 
-    private async void FormMain_Load(object sender, EventArgs e)
+    private void EinstellungenEingebenErzwingen(object? sender, EventArgs e)
+    {
+        TabStatusSetzen(false);
+        tbcForms.SelectedTab = tbpEinstellungen;
+    }
+
+    private void EinstellungenSetzen(object sender, EinstellungenGeladenEventArgs einstellungen)
+    {
+        _clockodoSettings = einstellungen.ClockodoEinstellungen;
+        _lexofficeKonfiguration = einstellungen.LexofficeEinstellungen;
+        DatenNeuladen();
+        UhrAktualisierungsTimerStarten();
+        TabStatusSetzen(true, true);
+    }
+
+    private void FormMain_Load(object sender, EventArgs e)
     {
         this.Visible = false;
 
-        ctrl_LadeDaten.Enabled = false;
-        ZeitraumSchnellauswahlButtonTexteSetzen();
-        StandardZeitraumSetzen();
-
-        var einstellungenErfolgreichGeladen = await LoadSettings();
-
-        if (!einstellungenErfolgreichGeladen)
-        {
-            TabStatusSetzen(false);
-            tbcForms.SelectedTab = tbpEinstellungen;
-        }
-        else
-        {
-            UpdateSettings();
-            UhrAktualisierungsTimerStarten();
-        }
+        var einstellungenControl = new EinstellungenControl();
+        tbpEinstellungen.Controls.Add(einstellungenControl);
+        einstellungenControl.Dock = DockStyle.Fill;
+        einstellungenControl.EinstellungenErfolreichGeladen += EinstellungenSetzen;
+        einstellungenControl.EinstellungenKonntenNichtGeladenWerden +=
+            EinstellungenEingebenErzwingen;
+        einstellungenControl.EinstellungenAktualisierungStart += (_, _) =>
+            TabStatusSetzen(false, true);
+        einstellungenControl.EinstellungenAktualisierungEnde += (_, _) =>
+            TabStatusSetzen(true, true);
+        einstellungenControl.Laden();
 
         tbcForms.Controls.Remove(tbpErfassen);
-        this.Visible = false;
+
+        this.Visible = true;
+
+        ZeitraumSchnellauswahlButtonTexteSetzen();
+        StandardZeitraumSetzen();
     }
 
     private void UhrAktualisierungsTimerStarten()
@@ -83,14 +87,17 @@ public partial class FormMain : Form
         tbpClockodo.Enabled = status;
 
         if (settingsAuchBlockieren)
+        {
             tbpEinstellungen.Enabled = status;
+            tbpEinstellungen.Enabled = status;
+        }
     }
 
     private async Task LoadUserAccountInformation()
     {
         try
         {
-            var accountService = new AccountService(_settings.CreateApiConnectionSettings);
+            var accountService = new AccountService(_clockodoSettings.CreateApiConnectionSettings);
             _accountInformation = await accountService.GetMyAccount();
             ctrl_ZeigeSelektiertenMitarbeiter.Text = $"Angemeldet als: {_accountInformation.Name}";
         }
@@ -98,32 +105,6 @@ public partial class FormMain : Form
         {
             Debug.WriteLine(e);
         }
-    }
-
-    private async Task DisplaySettings()
-    {
-        ctrl_ApiToken.Text = _settings.ApiToken;
-        ctrl_EmailAdresse.Text = _settings.EmailAddress;
-    }
-
-    private async Task<bool> LoadSettings()
-    {
-        var configurationLoadResult = await _environmentManager.Get<QuickActionSettings>();
-
-        if (configurationLoadResult.IsFailure)
-        {
-            MessageBox.Show(
-                $"Konfiguration konnte nicht geladen werden.{Environment.NewLine}"
-                    + $"Bitte Erstkonfiguration gemäß der Anleitung durchführen.",
-                "Hinweis",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
-            return false;
-        }
-
-        _settings = configurationLoadResult.Value;
-        return true;
     }
 
     private async void ctrl_LadeDaten_Click(object sender, EventArgs e)
@@ -139,7 +120,7 @@ public partial class FormMain : Form
             var vor14Tagen = jetzt.AddDays(-14);
 
             var period = ClockodoPeriod.Create(vor14Tagen, jetzt);
-            var clockodoService = new TimeEntriesService(_settings.ClockodoCredentials);
+            var clockodoService = new TimeEntriesService(_clockodoSettings.ClockodoCredentials);
 
             var alleEinträgeDerMitarbeiter = (
                 await clockodoService.GetTimeEntriesAsync(period.Value, _accountInformation.Id)
@@ -182,78 +163,8 @@ public partial class FormMain : Form
         }
     }
 
-    private async Task<bool> TestSettings(QuickActionSettings settings)
+    private async void DatenNeuladen()
     {
-        try
-        {
-            var testService = new AccountService(settings.CreateApiConnectionSettings);
-            var accountInformationen = await testService.GetMyAccount();
-            return accountInformationen is not null;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
-
-    private async void ctrl_EinstellungenSpeichern_Click(object sender, EventArgs e)
-    {
-        TabStatusSetzen(false, true);
-
-        var newSettings = new QuickActionSettings
-        {
-            ApiToken = ctrl_ApiToken.Text,
-            EmailAddress = ctrl_EmailAdresse.Text
-        };
-
-        var einstellungenSindValide = await TestSettings(newSettings);
-
-        if (!einstellungenSindValide)
-        {
-            MessageBox.Show(
-                $"Die eingegebene Konfiguration ist unzulässig.{Environment.NewLine}"
-                    + "Bitte kopiere erneut E-Mail und Api-Key.",
-                "Hinweis",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
-            return;
-        }
-
-        var speicherErgebnis = await _environmentManager.Save(newSettings);
-        TabStatusSetzen(true, true);
-
-        if (speicherErgebnis.IsFailure)
-        {
-            MessageBox.Show(
-                speicherErgebnis.Error,
-                "Hinweis",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
-            return;
-        }
-
-        MessageBox.Show(
-            "Konfiguration erfolgreich gespeichert",
-            "Hinweis",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
-        );
-
-        tbcForms.SelectedTab = tbpClockodo;
-
-        await LoadUserAccountInformation();
-        TabStatusSetzen(true);
-
-        UpdateSettings();
-        UhrAktualisierungsTimerStarten();
-    }
-
-    private async void UpdateSettings()
-    {
-        await LoadSettings();
-        await DisplaySettings();
         await LoadUserAccountInformation();
         await DatenNeuAbrufen();
         ctrl_Zeiteintraege.Focus();
@@ -268,7 +179,7 @@ public partial class FormMain : Form
         if (zeiteintrag == null)
             return;
 
-        var clockService = new ClockService(_settings.CreateApiConnectionSettings);
+        var clockService = new ClockService(_clockodoSettings.CreateApiConnectionSettings);
         var form = new EditTimeEntry(clockService, zeiteintrag);
 
         form.ShowDialog();
@@ -296,7 +207,7 @@ public partial class FormMain : Form
 
     private async Task LaufendeUhrAktualisieren()
     {
-        var clockService = new ClockService(_settings.CreateApiConnectionSettings);
+        var clockService = new ClockService(_clockodoSettings.CreateApiConnectionSettings);
         var result = await clockService.GetRunningClockEntry();
         if (result == null)
             return;
@@ -336,7 +247,7 @@ public partial class FormMain : Form
             return;
         }
 
-        var clockodoService = new TimeEntriesService(_settings.ClockodoCredentials);
+        var clockodoService = new TimeEntriesService(_clockodoSettings.ClockodoCredentials);
 
         var abfragenUndAktualisierenFunc = async () =>
             await ZeiteinträgeAbfragenUndEvaluieren(period.Value, clockodoService);

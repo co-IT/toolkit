@@ -1,9 +1,9 @@
 using coIT.Libraries.Clockodo;
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 
-namespace coIT.Clockodo.QuickActions;
+namespace coIT.Clockodo.QuickActions.Einstellungen;
 
-public class QuickActionSettings
+public class ClockodoEinstellungen
 {
     public string ApiToken { get; set; }
     public string EmailAddress { get; set; }
