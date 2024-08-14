@@ -16,14 +16,14 @@ namespace coIT.Libraries.ConfigurationManager
             _serializer = new();
         }
 
-        public Result<T> Get<T>()
+        public Task<Result<T>> Get<T>()
         {
             return Result
                 .Success()
                 .Bind(() => _environmentManager.GetKeyNameFromObject(typeof(T)))
                 .Bind(_environmentManager.GetEnvironmentValue)
                 .Ensure(File.Exists, path => $"Bitte überprüfe den Pfad '{path}' auf Korrektheit")
-                .Map(path => File.ReadAllText(path, System.Text.Encoding.UTF8))
+                .Map(path => File.ReadAllTextAsync(path, System.Text.Encoding.UTF8))
                 .Bind(_serializer.Deserialize<T>);
         }
 
