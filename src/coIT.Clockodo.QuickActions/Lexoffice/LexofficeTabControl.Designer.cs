@@ -1,4 +1,4 @@
-﻿namespace coIT.Clockodo.QuickActions.Lexoffice
+namespace coIT.Clockodo.QuickActions.Lexoffice
 {
     partial class LexofficeTabControl
     {
@@ -29,15 +29,13 @@
         private void InitializeComponent()
         {
             tabControl1 = new TabControl();
-            tabPage1 = new TabPage();
-            lexofficeRechnungskontrolle1 = new LexofficeRechnungskontrolle();
+            tbpRechnungSelbstkontrolle = new TabPage();
             tabControl1.SuspendLayout();
-            tabPage1.SuspendLayout();
             SuspendLayout();
             // 
             // tabControl1
             // 
-            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tbpRechnungSelbstkontrolle);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
@@ -45,24 +43,15 @@
             tabControl1.Size = new Size(853, 479);
             tabControl1.TabIndex = 0;
             // 
-            // tabPage1
+            // tbpRechnungSelbstkontrolle
             // 
-            tabPage1.Controls.Add(lexofficeRechnungskontrolle1);
-            tabPage1.Location = new Point(4, 24);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(845, 451);
-            tabPage1.TabIndex = 0;
-            tabPage1.Text = "Rechnung Selbstkontrolle";
-            tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // lexofficeRechnungskontrolle1
-            // 
-            lexofficeRechnungskontrolle1.Dock = DockStyle.Fill;
-            lexofficeRechnungskontrolle1.Location = new Point(3, 3);
-            lexofficeRechnungskontrolle1.Name = "lexofficeRechnungskontrolle1";
-            lexofficeRechnungskontrolle1.Size = new Size(839, 445);
-            lexofficeRechnungskontrolle1.TabIndex = 0;
+            tbpRechnungSelbstkontrolle.Location = new Point(4, 24);
+            tbpRechnungSelbstkontrolle.Name = "tbpRechnungSelbstkontrolle";
+            tbpRechnungSelbstkontrolle.Padding = new Padding(3);
+            tbpRechnungSelbstkontrolle.Size = new Size(845, 451);
+            tbpRechnungSelbstkontrolle.TabIndex = 0;
+            tbpRechnungSelbstkontrolle.Text = "Rechnung Selbstkontrolle";
+            tbpRechnungSelbstkontrolle.UseVisualStyleBackColor = true;
             // 
             // LexofficeTabControl
             // 
@@ -71,15 +60,15 @@
             Controls.Add(tabControl1);
             Name = "LexofficeTabControl";
             Size = new Size(853, 479);
+            Load += LexofficeTabControl_Load;
             tabControl1.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private TabControl tabControl1;
-        private TabPage tabPage1;
+        private TabPage tbpRechnungSelbstkontrolle;
         private LexofficeRechnungskontrolle lexofficeRechnungskontrolle1;
     }
 }

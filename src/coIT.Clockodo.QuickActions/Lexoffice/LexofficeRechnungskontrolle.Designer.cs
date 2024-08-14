@@ -32,7 +32,9 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             btnRechnungPrüfen = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
+            lblErgebnisse = new Label();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // tbxRechnungUrl
@@ -66,12 +68,20 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(lblErgebnisse);
             groupBox2.Location = new Point(17, 127);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(948, 260);
             groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "Ergebnisse der Prüfung";
+            // 
+            // lblErgebnisse
+            // 
+            lblErgebnisse.Location = new Point(6, 32);
+            lblErgebnisse.Name = "lblErgebnisse";
+            lblErgebnisse.Size = new Size(936, 213);
+            lblErgebnisse.TabIndex = 0;
             // 
             // LexofficeRechnungskontrolle
             // 
@@ -83,6 +93,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             Size = new Size(968, 491);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -92,5 +103,6 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
         private Button btnRechnungPrüfen;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
+        private Label lblErgebnisse;
     }
 }

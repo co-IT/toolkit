@@ -52,7 +52,6 @@ namespace coIT.Clockodo.QuickActions
             lblEnde = new Label();
             dtpZeitraumStart = new DateTimePicker();
             tbpLexoffice = new TabPage();
-            lexofficeTabControl1 = new Lexoffice.LexofficeTabControl();
             tbpEinstellungen = new TabPage();
             tbpErfassen.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -318,7 +317,6 @@ namespace coIT.Clockodo.QuickActions
             // 
             // tbpLexoffice
             // 
-            tbpLexoffice.Controls.Add(lexofficeTabControl1);
             tbpLexoffice.Location = new Point(4, 32);
             tbpLexoffice.Name = "tbpLexoffice";
             tbpLexoffice.Padding = new Padding(3);
@@ -326,14 +324,6 @@ namespace coIT.Clockodo.QuickActions
             tbpLexoffice.TabIndex = 3;
             tbpLexoffice.Text = "Lexoffice";
             tbpLexoffice.UseVisualStyleBackColor = true;
-            // 
-            // lexofficeTabControl1
-            // 
-            lexofficeTabControl1.Dock = DockStyle.Fill;
-            lexofficeTabControl1.Location = new Point(3, 3);
-            lexofficeTabControl1.Name = "lexofficeTabControl1";
-            lexofficeTabControl1.Size = new Size(1273, 663);
-            lexofficeTabControl1.TabIndex = 0;
             // 
             // tbpEinstellungen
             // 
@@ -399,7 +389,6 @@ namespace coIT.Clockodo.QuickActions
         private TabPage tbpLexoffice;
         private TabControl tbcClockodo;
         private TabPage tbpClockodoSelbstkontrolle;
-        private Lexoffice.LexofficeTabControl lexofficeTabControl1;
         private TabPage tbpEinstellungen;
     }
 }

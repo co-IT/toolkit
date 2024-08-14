@@ -29,18 +29,15 @@ namespace coIT.Clockodo.QuickActions.Einstellungen
         internal event EventHandler EinstellungenAktualisierungStart;
         internal event EventHandler EinstellungenAktualisierungEnde;
 
-        public EinstellungenControl()
+        public EinstellungenControl(
+            EnvironmentManager environmentManager,
+            FileSystemManager fileSystemManager
+        )
         {
             InitializeComponent();
 
-            _clockodoEinstellungen = new ClockodoEinstellungen();
-            var key =
-                "eyJJdGVtMSI6IlZSZG1iaEJEVnF6U0swbTBHYjBEUFREdWU5c01sSmNNeURwOE1qb1VKTjg9IiwiSXRlbTIiOiJubE00WEJsTkZGTWFDVFd3Si9EdEZRPT0ifQ==";
-            var aesCryptography = AesCryptographyService.FromKey(key).Value;
-            var jsonSerializer = new NewtonsoftJsonSerializer();
-
-            _environmentManager = new EnvironmentManager(aesCryptography, jsonSerializer);
-            _fileSystemManager = new FileSystemManager();
+            _environmentManager = environmentManager;
+            _fileSystemManager = fileSystemManager;
         }
 
         public void Laden()

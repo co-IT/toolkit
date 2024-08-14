@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using coIT.Libraries.LexOffice.DataContracts.Contacts;
 using coIT.Libraries.LexOffice.DataContracts.Country;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
@@ -220,7 +220,7 @@ public class LexofficeService : IInvoiceService
         );
     }
 
-    private async Task<Invoice> GetInvoiceAsync(string id)
+    public async Task<Invoice> GetInvoiceAsync(string id)
     {
         var uri = LexofficeApiAddressesBuilder.InvoiceUri(id);
 

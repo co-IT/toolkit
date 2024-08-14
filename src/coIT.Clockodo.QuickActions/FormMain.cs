@@ -1,12 +1,16 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using coIT.Clockodo.QuickActions.Einstellungen;
+using coIT.Clockodo.QuickActions.Lexoffice;
 using coIT.Libraries.Clockodo.Account;
 using coIT.Libraries.Clockodo.Account.Contracts;
 using coIT.Libraries.Clockodo.BusinessRules;
 using coIT.Libraries.Clockodo.Clock;
 using coIT.Libraries.Clockodo.TimeEntries;
 using coIT.Libraries.ConfigurationManager;
+using coIT.Libraries.ConfigurationManager.Cryptography;
+using coIT.Libraries.ConfigurationManager.Serialization;
+using coIT.Libraries.LexOffice;
 using coIT.Libraries.WinForms;
 using coIT.Libraries.WinForms.DateTimeButtons;
 
@@ -17,6 +21,8 @@ public partial class FormMain : Form
     private AccountInformation _accountInformation;
     private ClockodoEinstellungen _clockodoSettings;
     private LexofficeKonfiguration _lexofficeKonfiguration;
+    private EnvironmentManager _environmentManager;
+    private FileSystemManager _fileSystemManager;
 
     public FormMain()
     {
@@ -43,8 +49,39 @@ public partial class FormMain : Form
     private void FormMain_Load(object sender, EventArgs e)
     {
         this.Visible = false;
+        KonfigurationManagerLaden();
+        EinstellungenLaden();
+        LexofficeTabLaden();
 
-        var einstellungenControl = new EinstellungenControl();
+        // Wird derzeit nicht benötigt und würde Anwender verwirren
+        tbcForms.Controls.Remove(tbpErfassen);
+
+        this.Visible = true;
+
+        ZeitraumSchnellauswahlButtonTexteSetzen();
+        StandardZeitraumSetzen();
+    }
+
+    private void LexofficeTabLaden()
+    {
+        var lexofficeService = new LexofficeService(_lexofficeKonfiguration.LexofficeKey);
+        var timeEntriesServices = new TimeEntriesService(_clockodoSettings.ClockodoCredentials);
+        var lexofficeTab = new LexofficeTabControl(
+            lexofficeService,
+            timeEntriesServices,
+            _fileSystemManager
+        );
+        tbpLexoffice.Controls.Add(lexofficeTab);
+        lexofficeTab.Dock = DockStyle.Fill;
+    }
+
+    private void EinstellungenLaden()
+    {
+        var einstellungenControl = new EinstellungenControl(
+            _environmentManager,
+            _fileSystemManager
+        );
+
         tbpEinstellungen.Controls.Add(einstellungenControl);
         einstellungenControl.Dock = DockStyle.Fill;
         einstellungenControl.EinstellungenErfolreichGeladen += EinstellungenSetzen;
@@ -55,13 +92,17 @@ public partial class FormMain : Form
         einstellungenControl.EinstellungenAktualisierungEnde += (_, _) =>
             TabStatusSetzen(true, true);
         einstellungenControl.Laden();
+    }
 
-        tbcForms.Controls.Remove(tbpErfassen);
+    private void KonfigurationManagerLaden()
+    {
+        var key =
+            "eyJJdGVtMSI6IlZSZG1iaEJEVnF6U0swbTBHYjBEUFREdWU5c01sSmNNeURwOE1qb1VKTjg9IiwiSXRlbTIiOiJubE00WEJsTkZGTWFDVFd3Si9EdEZRPT0ifQ==";
+        var aesCryptography = AesCryptographyService.FromKey(key).Value;
+        var jsonSerializer = new NewtonsoftJsonSerializer();
 
-        this.Visible = true;
-
-        ZeitraumSchnellauswahlButtonTexteSetzen();
-        StandardZeitraumSetzen();
+        _environmentManager = new EnvironmentManager(aesCryptography, jsonSerializer);
+        _fileSystemManager = new FileSystemManager();
     }
 
     private void UhrAktualisierungsTimerStarten()
