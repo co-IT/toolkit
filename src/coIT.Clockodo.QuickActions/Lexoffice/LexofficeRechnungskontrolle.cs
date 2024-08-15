@@ -34,7 +34,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
         private async void btnRechnungPrüfen_Click(object sender, EventArgs e)
         {
-            EingabeBlockieren(true);
+            EingabeBlockieren(false);
 
             var rechnungPrüfungsErgebnis = await Result
                 .Success(tbxRechnungUrl.Text)
@@ -45,7 +45,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
             PrüfergebnisAnzeigen(rechnungPrüfungsErgebnis);
 
-            EingabeBlockieren(false);
+            EingabeBlockieren(true);
         }
 
         private void EingabeBlockieren(bool blockieren)
