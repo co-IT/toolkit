@@ -101,7 +101,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching
         )
         {
             if (cacheAktualisieren || !_rechnungenCache.ContainsKey(tag))
-                _rechnungenCache[tag] = await _fallbackCache.RechnungenFürTagAbfragen(tag, true);
+                _rechnungenCache[tag] = await _fallbackCache.RechnungenAbfragen((tag, tag), true);
 
             return _rechnungenCache[tag];
         }
