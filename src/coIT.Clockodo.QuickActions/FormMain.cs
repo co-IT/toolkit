@@ -64,13 +64,7 @@ public partial class FormMain : Form
 
     private void LexofficeTabLaden()
     {
-        var lexofficeService = new LexofficeService(_lexofficeKonfiguration.LexofficeKey);
-        var timeEntriesServices = new TimeEntriesService(_clockodoSettings.ClockodoCredentials);
-        var lexofficeTab = new LexofficeTabControl(
-            lexofficeService,
-            timeEntriesServices,
-            _fileSystemManager
-        );
+        var lexofficeTab = new LexofficeTabControl(_fileSystemManager, _environmentManager);
         tbpLexoffice.Controls.Add(lexofficeTab);
         lexofficeTab.Dock = DockStyle.Fill;
     }

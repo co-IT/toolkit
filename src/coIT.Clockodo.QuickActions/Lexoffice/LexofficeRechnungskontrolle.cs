@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Drawing.Text;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using coIT.Clockodo.QuickActions.Einstellungen;
 using coIT.Clockodo.QuickActions.Einstellungen.Konten;
 using coIT.Clockodo.QuickActions.Einstellungen.Kunden;
 using coIT.Clockodo.QuickActions.Einstellungen.Mitarbeiter;
@@ -18,20 +19,17 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 {
     public partial class LexofficeRechnungskontrolle : UserControl
     {
-        private readonly LexofficeService _lexofficeService;
-        private readonly TimeEntriesService _clockodoService;
         private readonly FileSystemManager _fileSystemManager;
+        private readonly EnvironmentManager _environmentManager;
 
         public LexofficeRechnungskontrolle(
-            LexofficeService lexofficeService,
-            TimeEntriesService clockodoService,
-            FileSystemManager fileSystemManager
+            FileSystemManager fileSystemManager,
+            EnvironmentManager environmentManager
         )
         {
             InitializeComponent();
-            _lexofficeService = lexofficeService;
-            _clockodoService = clockodoService;
             _fileSystemManager = fileSystemManager;
+            _environmentManager = environmentManager;
         }
 
         private async void btnRechnungPrüfen_Click(object sender, EventArgs e)
@@ -77,22 +75,18 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
         private async Task<Result<Invoice>> RechnungsdatenVonLexofficeAbfragen(string rechnungsId)
         {
-            try
-            {
-                var invoice = await _lexofficeService.GetInvoiceAsync(rechnungsId);
-
-                return Result.SuccessIf(
-                    invoice is not null,
-                    invoice!,
+            return await _environmentManager
+                .Get<LexofficeKonfiguration>()
+                .Map((konfiguration) => new LexofficeService(konfiguration.LexofficeKey))
+                .MapTry(
+                    (lexofficeService) => lexofficeService.GetInvoiceAsync(rechnungsId),
+                    (_) =>
+                        $"Hast du den richtigen Rechnungslink kopiert?. Die Rechnung mit der ID {rechnungsId} konnte nicht gefunden werden."
+                )
+                .Ensure(
+                    (invoice) => invoice is not null,
                     "Beim Abrufen der Rechnung gab es einen Fehler. Bitte überprüfe die URL und versuche es erneut."
                 );
-            }
-            catch (Exception e)
-            {
-                return Result.Failure<Invoice>(
-                    $"Stell sicher, dass du den richtigen Rechnungslink kopiert hast. Die Rechnung mit der ID {rechnungsId} konnte nicht gefunden werden."
-                );
-            }
         }
 
         private async Task<Result> RechnungÜberprüfen(Invoice rechnung, IchPrüfe<Invoice> prüfer)
@@ -110,27 +104,25 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
         private async Task<Result<ImmutableHashSet<int>>> AlleMitarbeiterIdsErhalten()
         {
-            var mitarbeiterAusDateisystemErgebnis = await MitarbeiterAusDateisystemLaden();
-            if (mitarbeiterAusDateisystemErgebnis.IsFailure)
-                return mitarbeiterAusDateisystemErgebnis.Map(_ =>
-                    new HashSet<int>().ToImmutableHashSet()
-                );
-
-            List<int> mitarbeiterIdsInClockodo = await MitarbeiterAusClockodoLaden();
-
-            return mitarbeiterAusDateisystemErgebnis
-                .Value.Concat(mitarbeiterIdsInClockodo)
-                .ToImmutableHashSet();
+            return await MitarbeiterAusDateisystemLaden()
+                .BindZip((_) => MitarbeiterAusClockodoLaden())
+                .Map((tuple) => tuple.First.Concat(tuple.Second).ToImmutableHashSet());
         }
 
-        private async Task<List<int>> MitarbeiterAusClockodoLaden()
+        private async Task<Result<List<int>>> MitarbeiterAusClockodoLaden()
         {
             var adminMitarbeiterId = 350599;
-            var mitarbeiterIdsInClockodo = (await _clockodoService.GetAllUsers())
-                .Where(mitarbeiter => mitarbeiter.Id != adminMitarbeiterId)
-                .Select(mitarbeiter => int.Parse(mitarbeiter.Number))
-                .ToList();
-            return mitarbeiterIdsInClockodo;
+            return await _environmentManager
+                .Get<ClockodoEinstellungen>()
+                .Map((konfiguration) => new TimeEntriesService(konfiguration.ClockodoCredentials))
+                .Map((clockodoService) => clockodoService.GetAllUsers())
+                .Map(
+                    (clockodoNutzer) =>
+                        clockodoNutzer
+                            .Where(mitarbeiter => mitarbeiter.Id != adminMitarbeiterId)
+                            .Select(mitarbeiter => int.Parse(mitarbeiter.Number))
+                            .ToList()
+                );
         }
 
         private async Task<Result<HashSet<int>>> MitarbeiterAusDateisystemLaden()

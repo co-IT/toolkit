@@ -6,28 +6,24 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 {
     public partial class LexofficeTabControl : UserControl
     {
-        private readonly LexofficeService _lexofficeService;
-        private readonly TimeEntriesService _clockodoService;
         private readonly FileSystemManager _fileSystemManager;
+        private readonly EnvironmentManager _environmentManager;
 
         public LexofficeTabControl(
-            LexofficeService lexofficeService,
-            TimeEntriesService clockodoService,
-            FileSystemManager fileSystemManager
+            FileSystemManager fileSystemManager,
+            EnvironmentManager environmentManager
         )
         {
             InitializeComponent();
-            _lexofficeService = lexofficeService;
-            _clockodoService = clockodoService;
             _fileSystemManager = fileSystemManager;
+            _environmentManager = environmentManager;
         }
 
         private void LexofficeTabControl_Load(object sender, EventArgs e)
         {
             var rechnungsKontrolle = new LexofficeRechnungskontrolle(
-                _lexofficeService,
-                _clockodoService,
-                _fileSystemManager
+                _fileSystemManager,
+                _environmentManager
             );
 
             tbpRechnungSelbstkontrolle.Controls.Add(rechnungsKontrolle);
