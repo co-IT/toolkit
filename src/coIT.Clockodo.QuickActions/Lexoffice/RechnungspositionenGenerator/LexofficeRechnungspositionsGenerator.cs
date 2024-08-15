@@ -11,6 +11,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator
     {
         private readonly FileSystemManager _fileSystemManager;
         private readonly EnvironmentManager _environmentManager;
+        private List<Mitarbeiter> _mitarbeiterListe = new();
 
         public LexofficeRechnungspositionsGenerator(
             FileSystemManager fileSystemManager,
@@ -63,7 +64,8 @@ namespace coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator
                 var aktiveMitarbeiter = mitarbeiterErgebnis.Value.Where(mitarbeiter =>
                     mitarbeiter.Aktiv
                 );
-                lbxMitarbeiter.DataSource = aktiveMitarbeiter.ToList();
+                _mitarbeiterListe = aktiveMitarbeiter.ToList();
+                lbxMitarbeiter.Items.AddRange(_mitarbeiterListe.ToArray());
                 return;
             }
 
@@ -159,6 +161,23 @@ namespace coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator
                         "Konto konnte mit den eingegebenen Daten nicht ermittelt werden"
                     )
             };
+        }
+
+        private void lbxLeistung_SelectedValueChanged(object sender, EventArgs e)
+        {
+            var leistungLesenErgebnis = LeistungAuslesen();
+            var mitarbeiter = _mitarbeiterListe;
+
+            if (
+                leistungLesenErgebnis.IsSuccess
+                && leistungLesenErgebnis.Value == ServiceTypePositions.GoodsSale
+            )
+            {
+                mitarbeiter = mitarbeiter.Where(m => m.Nummer > 99900).ToList();
+            }
+
+            lbxMitarbeiter.Items.Clear();
+            lbxMitarbeiter.Items.AddRange(mitarbeiter.ToArray());
         }
     }
 }

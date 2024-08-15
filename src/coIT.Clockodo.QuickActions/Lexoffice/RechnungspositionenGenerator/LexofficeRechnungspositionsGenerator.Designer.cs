@@ -88,6 +88,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator
             lbxLeistung.Name = "lbxLeistung";
             lbxLeistung.Size = new Size(338, 257);
             lbxLeistung.TabIndex = 0;
+            lbxLeistung.SelectedValueChanged += lbxLeistung_SelectedValueChanged;
             // 
             // groupBox3
             // 
