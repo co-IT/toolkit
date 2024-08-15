@@ -10,6 +10,11 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching
             bool cacheAktualisieren
         );
 
+        public Task<List<LexOfficeInvoice>> RechnungenFürTagAbfragen(
+            DateOnly tag,
+            bool cacheAktualisieren
+        );
+
         public Task<List<ContactInformation>> KundenAbfragen(bool cacheAktualisieren);
     }
 }

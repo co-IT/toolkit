@@ -8,7 +8,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching
     {
         private static Dictionary<DateOnly, List<LexOfficeInvoice>> _rechnungenCache = new();
         private static List<ContactInformation> _kundenCache;
-        private readonly LexofficeService? _service;
+        private readonly LexofficeService _service;
 
         public TagesbasierterCache(LexofficeService service)
         {
@@ -54,7 +54,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching
             }
         }
 
-        private async Task<List<LexOfficeInvoice>> RechnungenFürTagAbfragen(
+        public async Task<List<LexOfficeInvoice>> RechnungenFürTagAbfragen(
             DateOnly tag,
             bool cacheAktualisieren
         )

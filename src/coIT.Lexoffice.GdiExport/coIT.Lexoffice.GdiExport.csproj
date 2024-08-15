@@ -20,4 +20,12 @@
     <ProjectReference Include="..\coIT.Libraries.Lexoffice\coIT.Libraries.LexOffice.csproj" />
     <ProjectReference Include="..\coIT.Libraries.WinForms\coIT.Libraries.WinForms.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="cache_kunden.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="cache_rechnungen.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

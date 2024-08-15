@@ -54,28 +54,42 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
 
             InitiiereStandardAbfragezeitraum();
 
-            //_cache = new Cache(_lexofficeService);
+#if DEBUG
+            _cache = await ErweiterterDateisystemCache.LadeCacheAusLokalerDatei(_lexofficeService);
+#else
             _cache = new TagesbasierterCache(_lexofficeService);
-
-            //Lokale Cache-Datei neu erzeugen
-            //var rechnungen = await _cache.Rechnungen(Zeitraum());
-            //var kunden = await _cache.Kunden();
-            //await Cache.ErzeugeLokalenCache(rechnungen, kunden);
+#endif
         }
 
         private async Task UmsatzAbfragenKlick()
         {
-            var umsätze = await UmsätzeLaden(ZeitraumAuslesen());
+            ButtonsBlockieren(true);
+
+            var zeitraum = ZeitraumAuslesen();
+            var cacheAktualisieren = cbxCacheNeuladen.Checked;
+            var umsätze = await UmsätzeLaden(zeitraum, cacheAktualisieren);
             UmsätzeAnzeigen(umsätze);
-            btnCsvAuswählen.Enabled = true;
+
+            ButtonsBlockieren(false);
+        }
+
+        private void ButtonsBlockieren(bool blockieren)
+        {
+            btnAbfragen.Enabled = !blockieren;
+            btnCsvAuswählen.Enabled = !blockieren;
         }
 
         private async Task<List<VersendeteRechnung>> UmsätzeLaden(
-            (DateOnly Von, DateOnly Bis) zeitraum
+            (DateOnly Von, DateOnly Bis) zeitraum,
+            bool cacheAktualisieren
         )
         {
-            var rechnungen = await _cache.RechnungenAbfragen(zeitraum, false);
-            var kunden = await _cache.KundenAbfragen(false);
+            var kunden = await _cache.KundenAbfragen(cacheAktualisieren);
+            var rechnungen = await _cache.RechnungenAbfragen(zeitraum, cacheAktualisieren);
+
+#if DEBUG
+            await ((ErweiterterDateisystemCache)_cache).LokalenCacheErzeugen();
+#endif
 
             var umsätze = UmsatzlisteErstellen(kunden, rechnungen);
 
@@ -174,20 +188,23 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
                 return;
             }
 
-            btnCsvAuswählen.Enabled = false;
+            ButtonsBlockieren(true);
 
             var buchungen = buchungenEinlesenErgebnis.Value.ToList();
 
             buchungen = DienstfahrzeugUmsätzeFiltern(buchungen);
 
-            var gestellteRechnungen = await UmsätzeLaden(ZeitraumAuslesen());
+            var gestellteRechnungen = await UmsätzeLaden(
+                ZeitraumAuslesen(),
+                cbxCacheNeuladen.Checked
+            );
             var abgleichung = AbgleichBuchhaltung.FindeAbweichungenZuRechnungen(
                 buchungen,
                 gestellteRechnungen
             );
             AbweichungenAnzeigen(abgleichung);
 
-            btnCsvAuswählen.Enabled = true;
+            ButtonsBlockieren(false);
         }
 
         private List<SaleBooking> DienstfahrzeugUmsätzeFiltern(List<SaleBooking> buchungen)
