@@ -8,9 +8,9 @@ using CSharpFunctionalExtensions.ValueTasks;
 using Newtonsoft.Json;
 using LexOfficeInvoice = coIT.Libraries.LexOffice.DataContracts.Invoice.Invoice;
 
-namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
+namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching
 {
-    internal class Cache
+    internal class ZeitfensterCache //: IchCacheLexofficeAbfragen
     {
         private static Dictionary<string, List<LexOfficeInvoice>> _rechnungenCache = new();
         private static List<ContactInformation>? _kundenCache;
@@ -21,12 +21,12 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
 
         private readonly LexofficeService? _service;
 
-        public Cache(LexofficeService service)
+        public ZeitfensterCache(LexofficeService service)
         {
             _service = service;
         }
 
-        private Cache(List<LexOfficeInvoice> rechnungen, List<ContactInformation> kunden)
+        private ZeitfensterCache(List<LexOfficeInvoice> rechnungen, List<ContactInformation> kunden)
         {
             _kundenCache = kunden;
             _rechnungenCache = new Dictionary<string, List<LexOfficeInvoice>>
@@ -36,7 +36,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             _nutzeLokaleDatei = true;
         }
 
-        public static async Task<Cache> LadeCacheAusLokalerDatei()
+        public static async Task<ZeitfensterCache> LadeCacheAusLokalerDatei()
         {
             var rechnungenCache = await File.ReadAllTextAsync(_rechnungenCacheDatei, Encoding.UTF8);
             var rechnungen =
@@ -48,7 +48,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
                 JsonConvert.DeserializeObject<List<ContactInformation>>(kundenCache)
                 ?? throw new InvalidDataException(_kundenCacheDatei);
 
-            return new Cache(rechnungen, kunden);
+            return new ZeitfensterCache(rechnungen, kunden);
         }
 
         public static async Task ErzeugeLokalenCache(
@@ -81,7 +81,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             return $"{zeitraum.Von.ToShortDateString()}{zeitraum.Bis.ToShortDateString()}";
         }
 
-        public async Task<List<ContactInformation>> Kunden()
+        public async Task<List<ContactInformation>> KundenAbfragen()
         {
             if (_kundenCache == null)
                 _kundenCache = (await _service!.GetContactsAsync()).ToList();
@@ -89,7 +89,9 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             return _kundenCache;
         }
 
-        public async Task<List<LexOfficeInvoice>> Rechnungen((DateOnly Von, DateOnly Bis) zeitraum)
+        public async Task<List<LexOfficeInvoice>> RechnungenAbfragen(
+            (DateOnly Von, DateOnly Bis) zeitraum
+        )
         {
             var cacheKey = CacheKey(zeitraum);
 

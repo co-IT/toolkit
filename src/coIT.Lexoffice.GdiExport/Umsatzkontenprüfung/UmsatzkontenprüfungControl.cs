@@ -1,5 +1,5 @@
 using System.Data;
-using coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.Cache;
+using coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.LexofficeCaching;
 using coIT.Libraries.Gdi.Accounting;
 using coIT.Libraries.Gdi.Accounting.Contracts;
 using coIT.Libraries.LexOffice;
