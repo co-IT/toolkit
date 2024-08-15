@@ -28,20 +28,22 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
         /// </summary>
         private void InitializeComponent()
         {
-            tabControl1 = new TabControl();
+            tbcLexoffice = new TabControl();
             tbpRechnungSelbstkontrolle = new TabPage();
-            tabControl1.SuspendLayout();
+            tbpPositionsGenerator = new TabPage();
+            tbcLexoffice.SuspendLayout();
             SuspendLayout();
             // 
-            // tabControl1
+            // tbcLexoffice
             // 
-            tabControl1.Controls.Add(tbpRechnungSelbstkontrolle);
-            tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 0);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(853, 479);
-            tabControl1.TabIndex = 0;
+            tbcLexoffice.Controls.Add(tbpRechnungSelbstkontrolle);
+            tbcLexoffice.Controls.Add(tbpPositionsGenerator);
+            tbcLexoffice.Dock = DockStyle.Fill;
+            tbcLexoffice.Location = new Point(0, 0);
+            tbcLexoffice.Name = "tbcLexoffice";
+            tbcLexoffice.SelectedIndex = 0;
+            tbcLexoffice.Size = new Size(853, 479);
+            tbcLexoffice.TabIndex = 0;
             // 
             // tbpRechnungSelbstkontrolle
             // 
@@ -53,22 +55,33 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             tbpRechnungSelbstkontrolle.Text = "Rechnung Selbstkontrolle";
             tbpRechnungSelbstkontrolle.UseVisualStyleBackColor = true;
             // 
+            // tbpPositionsGenerator
+            // 
+            tbpPositionsGenerator.Location = new Point(4, 24);
+            tbpPositionsGenerator.Name = "tbpPositionsGenerator";
+            tbpPositionsGenerator.Padding = new Padding(3);
+            tbpPositionsGenerator.Size = new Size(845, 451);
+            tbpPositionsGenerator.TabIndex = 1;
+            tbpPositionsGenerator.Text = "Positions Generator";
+            tbpPositionsGenerator.UseVisualStyleBackColor = true;
+            // 
             // LexofficeTabControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(tabControl1);
+            Controls.Add(tbcLexoffice);
             Name = "LexofficeTabControl";
             Size = new Size(853, 479);
             Load += LexofficeTabControl_Load;
-            tabControl1.ResumeLayout(false);
+            tbcLexoffice.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TabControl tabControl1;
+        private TabControl tbcLexoffice;
         private TabPage tbpRechnungSelbstkontrolle;
         private LexofficeRechnungskontrolle lexofficeRechnungskontrolle1;
+        private TabPage tbpPositionsGenerator;
     }
 }

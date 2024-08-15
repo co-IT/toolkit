@@ -13,4 +13,9 @@ internal class Mitarbeiter
     public Team Team { get; set; }
 
     public string TeamName => Team.Name;
+
+    public override string ToString()
+    {
+        return $"{Nummer}: {Name}";
+    }
 }

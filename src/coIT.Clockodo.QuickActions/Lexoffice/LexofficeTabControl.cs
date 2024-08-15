@@ -1,3 +1,4 @@
+using coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator;
 using coIT.Libraries.Clockodo.TimeEntries;
 using coIT.Libraries.ConfigurationManager;
 using coIT.Libraries.LexOffice;
@@ -28,6 +29,14 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
             tbpRechnungSelbstkontrolle.Controls.Add(rechnungsKontrolle);
             rechnungsKontrolle.Dock = DockStyle.Fill;
+
+            var positionsGenerator = new LexofficeRechnungspositionsGenerator(
+                _fileSystemManager,
+                _environmentManager
+            );
+
+            tbpPositionsGenerator.Controls.Add(positionsGenerator);
+            positionsGenerator.Dock = DockStyle.Fill;
         }
     }
 }
