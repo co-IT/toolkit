@@ -1,9 +1,10 @@
 using System.Data;
-using coIT.Libraries.Clockodo.Absences;
+using coIT.Lexoffice.GdiExport.Umsatzkontenprüfung.Cache;
 using coIT.Libraries.Gdi.Accounting;
 using coIT.Libraries.Gdi.Accounting.Contracts;
 using coIT.Libraries.LexOffice;
 using coIT.Libraries.LexOffice.DataContracts.Contacts;
+using coIT.Libraries.WinForms.DateTimeButtons;
 using CSharpFunctionalExtensions;
 using LexOfficeInvoice = coIT.Libraries.LexOffice.DataContracts.Invoice.Invoice;
 
@@ -11,7 +12,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
 {
     internal partial class UmsatzkontenprüfungControl : UserControl
     {
-        private Cache _cache;
+        private IchCacheLexofficeAbfragen _cache;
         private readonly LexofficeService _lexofficeService;
 
         internal UmsatzkontenprüfungControl(LexofficeService lexofficeService)
@@ -20,19 +21,30 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             _lexofficeService = lexofficeService;
         }
 
-        private void InitiiereStandardAbfragezeitraum()
+        private async void btnAbfragen_Click(object sender, EventArgs e)
         {
-            //setze Controls
+            await UmsatzAbfragenKlick();
         }
 
-        private (DateOnly Von, DateOnly Bis) Zeitraum()
+        private void InitiiereStandardAbfragezeitraum()
         {
-            //lade Controls
-
             var jetzt = DateTime.Now;
-            var anfangDesJahres = new DateTime(jetzt.Year, 1, 1);
 
-            return (anfangDesJahres.ToDateOnly(), jetzt.ToDateOnly());
+            var endeDesLetztenMonats = jetzt.GetFirstDayInMonth().AddDays(-1);
+            var anfangDesMonatesVor6Monaten = endeDesLetztenMonats
+                .AddMonths(-5)
+                .GetFirstDayInMonth();
+
+            dtpZeitraumStart.Value = anfangDesMonatesVor6Monaten;
+            dtpZeitraumEnde.Value = endeDesLetztenMonats;
+        }
+
+        private (DateOnly Von, DateOnly Bis) ZeitraumAuslesen()
+        {
+            var anfang = dtpZeitraumStart.Value;
+            var ende = dtpZeitraumEnde.Value;
+
+            return (anfang.ToDateOnly(), ende.ToDateOnly());
         }
 
         private async void UmsatzkontenprüfungControl_Load(object sender, EventArgs e)
@@ -43,19 +55,17 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             InitiiereStandardAbfragezeitraum();
 
             //_cache = new Cache(_lexofficeService);
-            _cache = await Cache.LadeCacheAusLokalerDatei();
+            _cache = new TagesbasierterCache(_lexofficeService);
 
             //Lokale Cache-Datei neu erzeugen
             //var rechnungen = await _cache.Rechnungen(Zeitraum());
             //var kunden = await _cache.Kunden();
             //await Cache.ErzeugeLokalenCache(rechnungen, kunden);
-
-            await UmsatzAbfragenKlick();
         }
 
         private async Task UmsatzAbfragenKlick()
         {
-            var umsätze = await UmsätzeLaden(Zeitraum());
+            var umsätze = await UmsätzeLaden(ZeitraumAuslesen());
             UmsätzeAnzeigen(umsätze);
             btnCsvAuswählen.Enabled = true;
         }
@@ -64,8 +74,8 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
             (DateOnly Von, DateOnly Bis) zeitraum
         )
         {
-            var rechnungen = await _cache.Rechnungen(zeitraum);
-            var kunden = await _cache.Kunden();
+            var rechnungen = await _cache.RechnungenAbfragen(zeitraum, false);
+            var kunden = await _cache.KundenAbfragen(false);
 
             var umsätze = UmsatzlisteErstellen(kunden, rechnungen);
 
@@ -170,7 +180,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
 
             buchungen = DienstfahrzeugUmsätzeFiltern(buchungen);
 
-            var gestellteRechnungen = await UmsätzeLaden(Zeitraum());
+            var gestellteRechnungen = await UmsätzeLaden(ZeitraumAuslesen());
             var abgleichung = AbgleichBuchhaltung.FindeAbweichungenZuRechnungen(
                 buchungen,
                 gestellteRechnungen
