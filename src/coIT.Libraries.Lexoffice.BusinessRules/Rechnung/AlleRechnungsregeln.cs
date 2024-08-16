@@ -10,6 +10,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
     {
         private readonly AlleRechnungszeilenRegeln _rechungszeileRegeln;
         private readonly AllePositionenHabenGleichesKonto _allePositionenHabenGleichesKonto;
+        private readonly RechnungsnummerIstGültig _rechnungsnummerIstGültig;
         private readonly AlleLeistungsempfängerRegeln _leistungsempfängerIstKorret;
 
         public AlleRechnungsregeln(
@@ -23,6 +24,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
         {
             _rechungszeileRegeln = new AlleRechnungszeilenRegeln(bekannteKontonummern, mitarbeiter);
             _allePositionenHabenGleichesKonto = new AllePositionenHabenGleichesKonto();
+            _rechnungsnummerIstGültig = new RechnungsnummerIstGültig();
             _leistungsempfängerIstKorret = new AlleLeistungsempfängerRegeln(
                 leistungsempfängerMitDebitornummer
             );
@@ -34,11 +36,13 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
             var rechnungspositionenGleichesKontoErgebnis = _allePositionenHabenGleichesKonto.Prüfen(
                 rechnung
             );
+            var rechnungsnummerGültigErgebnis = _rechnungsnummerIstGültig.Prüfen(rechnung);
 
             return Result.Combine(
                 ZeilenPrüfen(rechnung),
                 leistungsemfängerPrüfungErgebnis,
-                rechnungspositionenGleichesKontoErgebnis
+                rechnungspositionenGleichesKontoErgebnis,
+                rechnungsnummerGültigErgebnis
             );
         }
 
