@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using coIT.Libraries.LexOffice.DataContracts.Contacts;
 using coIT.Libraries.LexOffice.DataContracts.Country;
@@ -13,6 +14,10 @@ public class LexofficeService : IInvoiceService
 {
     private readonly HttpClient _client;
     private readonly Random _random = new();
+
+    private DateTime _lastRequest = DateTime.MinValue;
+
+    private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public LexofficeService(string accessToken)
     {
@@ -61,41 +66,32 @@ public class LexofficeService : IInvoiceService
 
     public async Task<IImmutableList<Invoice>> GetInvoicesAsync(IImmutableList<Voucher> vouchers)
     {
-        var tasks = new List<Task<Invoice>>();
-        var throttler = new SemaphoreSlim(3);
+        var invoices = new ConcurrentBag<Invoice>();
+        var lexofficeRateLimit = 500;
 
         foreach (var voucher in vouchers)
         {
-            await throttler.WaitAsync().ConfigureAwait(false);
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            while ((DateTime.Now - _lastRequest).TotalMilliseconds < lexofficeRateLimit)
+            {
+                await Task.Delay(10);
+            }
 
-            tasks.Add(
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        var retryPolicy = Policy
-                            .Handle<HttpRequestException>()
-                            .WaitAndRetryAsync(
-                                10,
-                                retryAttempt =>
-                                    TimeSpan.FromMilliseconds(
-                                        Math.Pow(2, retryAttempt) + _random.Next(-1000, 1000)
-                                    )
-                            );
+            var retryPolicy = Policy
+                .Handle<HttpRequestException>()
+                .WaitAndRetryAsync(
+                    10,
+                    retryAttempt => TimeSpan.FromMilliseconds(lexofficeRateLimit)
+                );
 
-                        return await retryPolicy.ExecuteAsync(
-                            async () => await GetInvoiceAsync(voucher.Id).ConfigureAwait(false)
-                        );
-                    }
-                    finally
-                    {
-                        throttler.Release();
-                    }
-                })
+            var neueInvoice = await retryPolicy.ExecuteAsync(
+                async () => await GetInvoiceAsync(voucher.Id).ConfigureAwait(false)
             );
-        }
+            invoices.Add(neueInvoice);
 
-        var invoices = await Task.WhenAll(tasks.ToArray()).ConfigureAwait(false);
+            _lastRequest = DateTime.Now;
+            _semaphore.Release();
+        }
 
         return invoices.ToImmutableList();
     }
@@ -228,8 +224,6 @@ public class LexofficeService : IInvoiceService
         response.EnsureSuccessStatusCode();
 
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-        await Task.Delay(3000);
 
         var jsonSerializerSettings = new JsonSerializerSettings
         {
