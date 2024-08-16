@@ -2,7 +2,7 @@ using System.ComponentModel;
 using coIT.Libraries.LexOffice.DataContracts.Country;
 using Newtonsoft.Json;
 
-namespace coIT.Clockodo.QuickActions.Einstellungen.Kunden;
+namespace coIT.Libraries.Datengrundlagen.Kunden;
 
 public class Kunde
 {

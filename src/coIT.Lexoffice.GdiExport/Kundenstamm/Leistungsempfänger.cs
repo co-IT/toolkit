@@ -1,4 +1,5 @@
 using coIT.Lexoffice.GdiExport.Helpers;
+using coIT.Libraries.Datengrundlagen.Kunden;
 using coIT.Libraries.Gdi.Accounting.Contracts;
 using coIT.Libraries.LexOffice;
 

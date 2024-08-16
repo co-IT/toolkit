@@ -1,4 +1,4 @@
-namespace coIT.Lexoffice.GdiExport.Kundenstamm
+namespace coIT.Libraries.Datengrundlagen.Kunden
 {
     public class Kundenstamm : List<Kunde> { }
 }

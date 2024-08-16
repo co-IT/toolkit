@@ -1,8 +1,8 @@
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 
-namespace coIT.Clockodo.QuickActions.Einstellungen.Mitarbeiter
+namespace coIT.Libraries.Datengrundlagen.Mitarbeiter
 {
-    internal class MitarbeiterListe : List<Mitarbeiter>
+    public class MitarbeiterListe : List<Mitarbeiter>
     {
         public MitarbeiterListe ClockodoMitarbeiterHinzufügen(List<UserWithTeam> clockodoNutzer)
         {

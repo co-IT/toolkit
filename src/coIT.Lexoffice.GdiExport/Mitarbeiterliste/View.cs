@@ -5,6 +5,8 @@ using coIT.Lexoffice.GdiExport.Umsatzkonten;
 using coIT.Libraries.Clockodo;
 using coIT.Libraries.Clockodo.TimeEntries;
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
+using coIT.Libraries.Datengrundlagen.Konten;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using coIT.Libraries.LexOffice;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using coIT.Libraries.WinForms;

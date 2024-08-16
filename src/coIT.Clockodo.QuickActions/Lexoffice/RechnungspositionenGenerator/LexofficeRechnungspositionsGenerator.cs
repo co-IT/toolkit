@@ -1,8 +1,8 @@
 using coIT.Clockodo.QuickActions.Einstellungen;
-using coIT.Clockodo.QuickActions.Einstellungen.Mitarbeiter;
 using coIT.Libraries.Clockodo.TimeEntries;
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 using coIT.Libraries.ConfigurationManager;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using CSharpFunctionalExtensions;
 
 namespace coIT.Clockodo.QuickActions.Lexoffice.RechnungspositionenGenerator

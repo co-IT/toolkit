@@ -1,12 +1,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using coIT.Clockodo.QuickActions.Einstellungen.Konten;
-using coIT.Clockodo.QuickActions.Einstellungen.Kunden;
-using coIT.Clockodo.QuickActions.Einstellungen.Mitarbeiter;
 using coIT.Libraries.Clockodo.Account;
 using coIT.Libraries.ConfigurationManager;
 using coIT.Libraries.ConfigurationManager.Cryptography;
 using coIT.Libraries.ConfigurationManager.Serialization;
+using coIT.Libraries.Datengrundlagen.Konten;
+using coIT.Libraries.Datengrundlagen.Kunden;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using CSharpFunctionalExtensions;
 
 namespace coIT.Clockodo.QuickActions.Einstellungen

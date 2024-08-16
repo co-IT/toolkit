@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 
-namespace coIT.Lexoffice.GdiExport.Mitarbeiterliste;
+namespace coIT.Libraries.Datengrundlagen.Mitarbeiter;
 
-internal class Mitarbeiter
+public class Mitarbeiter
 {
     public int Nummer { get; set; }
     public string Name { get; set; }
@@ -13,4 +13,9 @@ internal class Mitarbeiter
     public Team Team { get; set; }
 
     public string TeamName => Team.Name;
+
+    public override string ToString()
+    {
+        return $"{Nummer}: {Name}";
+    }
 }

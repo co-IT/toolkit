@@ -1,18 +1,18 @@
 using System.Collections.Immutable;
-using System.Text;
 using coIT.Lexoffice.GdiExport.Helpers;
 using coIT.Lexoffice.GdiExport.Kundenstamm;
-using coIT.Lexoffice.GdiExport.Mitarbeiterliste;
-using coIT.Lexoffice.GdiExport.Umsatzkonten;
 using coIT.Lexoffice.GdiExport.Umsatzkontenprüfung;
 using coIT.Libraries.ConfigurationManager;
 using coIT.Libraries.ConfigurationManager.Cryptography;
 using coIT.Libraries.ConfigurationManager.Serialization;
+using coIT.Libraries.Datengrundlagen.Konten;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using coIT.Libraries.Gdi.Accounting;
 using coIT.Libraries.Gdi.Accounting.Contracts;
 using coIT.Libraries.LexOffice;
 using CSharpFunctionalExtensions;
 using GdiInvoice = coIT.Libraries.Gdi.Accounting.Contracts.Invoice;
+using KundenstammDaten = coIT.Libraries.Datengrundlagen.Kunden.Kundenstamm;
 using LexofficeInvoice = coIT.Libraries.LexOffice.DataContracts.Invoice.Invoice;
 using View = coIT.Lexoffice.GdiExport.Umsatzkonten.View;
 
@@ -93,7 +93,7 @@ public partial class MainForm : Form
 
         var konfigurationKorrektGesetzt = await environmentManager
             .Get<Konfiguration>()
-            .BindZip(_ => filesystemManager.GetPathFor<Kundenstamm.Kundenstamm>())
+            .BindZip(_ => filesystemManager.GetPathFor<KundenstammDaten>())
             .BindZip((_, _) => filesystemManager.GetPathFor<UmsatzkontenListe>())
             .BindZip((_, _, _) => filesystemManager.GetPathFor<MitarbeiterListe>());
 
@@ -125,10 +125,7 @@ public partial class MainForm : Form
         var konfigurationSpeichernErgebnis = await environmentManager
             .Save(credentialsForm.Konfiguration)
             .Bind(
-                () =>
-                    fileSystemManager.SavePathFor<Kundenstamm.Kundenstamm>(
-                        credentialsForm.Kundenstamm
-                    )
+                () => fileSystemManager.SavePathFor<KundenstammDaten>(credentialsForm.Kundenstamm)
             )
             .Bind(
                 () => fileSystemManager.SavePathFor<UmsatzkontenListe>(credentialsForm.Umsatzkonten)

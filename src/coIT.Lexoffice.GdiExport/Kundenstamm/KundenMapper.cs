@@ -1,4 +1,5 @@
-﻿using coIT.Libraries.Gdi.Accounting.Contracts;
+using coIT.Libraries.Datengrundlagen.Kunden;
+using coIT.Libraries.Gdi.Accounting.Contracts;
 using coIT.Libraries.LexOffice.DataContracts.Contacts;
 using coIT.Libraries.LexOffice.DataContracts.Country;
 

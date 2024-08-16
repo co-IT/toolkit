@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\coIT.Libraries.Clockodo\coIT.Libraries.Clockodo.csproj" />
     <ProjectReference Include="..\coIT.Libraries.ConfigurationManager\coIT.Libraries.ConfigurationManager.csproj" />
+    <ProjectReference Include="..\coIT.Libraries.Datengrundlagen\coIT.Libraries.Datengrundlagen.csproj" />
     <ProjectReference Include="..\coIT.Libraries.Gdi\coIT.Libraries.Gdi.csproj" />
     <ProjectReference Include="..\coIT.Libraries.Lexoffice.BusinessRules\coIT.Libraries.Lexoffice.BusinessRules.csproj" />
     <ProjectReference Include="..\coIT.Libraries.Lexoffice\coIT.Libraries.LexOffice.csproj" />

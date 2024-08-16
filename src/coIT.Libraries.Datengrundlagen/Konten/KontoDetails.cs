@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
-namespace coIT.Lexoffice.GdiExport.Umsatzkonten
+namespace coIT.Libraries.Datengrundlagen.Konten
 {
     public class KontoDetails
     {

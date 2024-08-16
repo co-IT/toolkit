@@ -1,4 +1,5 @@
-﻿using coIT.Libraries.LexOffice.DataContracts.Country;
+using coIT.Libraries.Datengrundlagen.Kunden;
+using coIT.Libraries.LexOffice.DataContracts.Country;
 
 namespace coIT.Lexoffice.GdiExport.Kundenstamm
 {

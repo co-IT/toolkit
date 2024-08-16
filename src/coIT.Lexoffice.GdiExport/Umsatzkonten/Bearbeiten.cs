@@ -1,4 +1,6 @@
-﻿namespace coIT.Lexoffice.GdiExport.Umsatzkonten
+using coIT.Libraries.Datengrundlagen.Konten;
+
+namespace coIT.Lexoffice.GdiExport.Umsatzkonten
 {
     internal partial class Bearbeiten : Form
     {

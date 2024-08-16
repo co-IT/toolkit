@@ -1,4 +1,5 @@
-﻿using coIT.Libraries.Clockodo.TimeEntries.Contracts;
+using coIT.Libraries.Clockodo.TimeEntries.Contracts;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 
 namespace coIT.Lexoffice.GdiExport.Mitarbeiterliste
 {
