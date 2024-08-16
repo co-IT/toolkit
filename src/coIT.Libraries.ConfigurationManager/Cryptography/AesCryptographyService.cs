@@ -27,7 +27,7 @@ namespace coIT.Libraries.ConfigurationManager.Cryptography
             aes = Aes.Create();
         }
 
-        private AesCryptographyService(byte[] key, byte[] iv)
+        internal AesCryptographyService(byte[] key, byte[] iv)
         {
             aes = Aes.Create();
             aes.Key = key;
