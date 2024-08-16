@@ -19,17 +19,16 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
             if (rechnungsZeile.Type is "text")
                 return Result.Success();
 
-            var mitarbeiterNummer = rechnungsZeile.MitarbeiterErmitteln();
-
-            var mitarbeiterNummerIstBekannt =
-                _mitarbeiter.Count(bekannterMitarbeiterNummer =>
-                    bekannterMitarbeiterNummer == mitarbeiterNummer
-                ) == 1;
-
-            return Result.SuccessIf(
-                mitarbeiterNummerIstBekannt,
-                $"Die Mitarbeiternummer {mitarbeiterNummer} ist nicht bekannt"
-            );
+            return rechnungsZeile
+                .MitarbeiterErmitteln()
+                .Ensure(
+                    mitarbeiterNummer =>
+                        _mitarbeiter.Count(bekannterMitarbeiterNummer =>
+                            bekannterMitarbeiterNummer == mitarbeiterNummer
+                        ) == 1,
+                    mitarbeiterNummer =>
+                        $"Die Mitarbeiternummer {mitarbeiterNummer} ist nicht bekannt"
+                );
         }
     }
 }

@@ -19,15 +19,12 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
             if (rechnungsZeile.Type is "text")
                 return Result.Success();
 
-            var konto = rechnungsZeile.KontoErmitteln();
-
-            var kontoExistiert = _bekannteKontonummern.Count(nummer => nummer == konto) == 1;
-
-            return Result.SuccessIf(
-                kontoExistiert,
-                rechnungsZeile,
-                $"Das Konto {konto} ist unbekannt."
-            );
+            return rechnungsZeile
+                .KontoErmitteln()
+                .Ensure(
+                    konto => _bekannteKontonummern.Count(nummer => nummer == konto) == 1,
+                    konto => $"Das Konto {konto} ist unbekannt."
+                );
         }
     }
 }

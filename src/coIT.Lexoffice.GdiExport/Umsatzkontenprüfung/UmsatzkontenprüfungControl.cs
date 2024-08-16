@@ -154,7 +154,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkontenprüfung
 
                     return new VersendeteRechnung
                     {
-                        Umsatzkonto = rechnung.KontoErmitteln(),
+                        Umsatzkonto = rechnung.KontoErmitteln().Value,
                         Datum = DateTime.Parse(rechnung.VoucherDate).ToDateOnly(),
                         Kundenname = kundenname,
                         KundennameLänge = längsterKundenName,

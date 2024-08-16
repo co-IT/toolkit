@@ -120,8 +120,13 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
                     (clockodoNutzer) =>
                         clockodoNutzer
                             .Where(mitarbeiter => mitarbeiter.Id != adminMitarbeiterId)
-                            .Select(mitarbeiter => int.Parse(mitarbeiter.Number))
+                            .Select(mitarbeiter => mitarbeiter.Number)
                             .ToList()
+                )
+                .MapTry(
+                    (nummernListe) =>
+                        nummernListe.Select(nummer => int.Parse(nummer ?? "0")).ToList(),
+                    (_) => "Mitarbeiternummer im ungültigen Format gefunden"
                 );
         }
 
