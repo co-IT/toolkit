@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Konten;
 using coIT.Libraries.LexOffice;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
@@ -7,11 +8,11 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
 {
     internal class KontoMussBekanntSein : IchPrüfe<InvoiceLineItem>
     {
-        private readonly IImmutableSet<int> _bekannteKontonummern;
+        private readonly IImmutableList<KontoDetails> _bekannteKonnten;
 
-        public KontoMussBekanntSein(IImmutableSet<int> bekannteKontonummern)
+        public KontoMussBekanntSein(IImmutableList<KontoDetails> bekannteKontonummern)
         {
-            _bekannteKontonummern = bekannteKontonummern;
+            _bekannteKonnten = bekannteKontonummern;
         }
 
         public Result Prüfen(InvoiceLineItem rechnungsZeile)
@@ -22,8 +23,9 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
             return rechnungsZeile
                 .KontoErmitteln()
                 .Ensure(
-                    konto => _bekannteKontonummern.Count(nummer => nummer == konto) == 1,
-                    konto => $"Das Konto {konto} ist unbekannt."
+                    kontoDerZeile =>
+                        _bekannteKonnten.Count(konto => konto.KontoNummer == kontoDerZeile) == 1,
+                    kontoDerZeile => $"Das Konto {kontoDerZeile} ist unbekannt."
                 );
         }
     }

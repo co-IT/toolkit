@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\coIT.Libraries.Datengrundlagen\coIT.Libraries.Datengrundlagen.csproj" />
     <ProjectReference Include="..\coIT.Libraries.Lexoffice\coIT.Libraries.LexOffice.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Kunden;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
@@ -6,13 +7,10 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
 {
     internal class LeistungsempfängerHatDebitornummer : IchPrüfe<Invoice>
     {
-        private readonly IImmutableList<(
-            string Id,
-            int DebitorNummer
-        )> _leistungsempfängerMitDebitornummer;
+        private readonly IImmutableList<Kunde> _leistungsempfängerMitDebitornummer;
 
         public LeistungsempfängerHatDebitornummer(
-            IImmutableList<(string, int)> leistungsempfängerMitDebitornummer
+            IImmutableList<Kunde> leistungsempfängerMitDebitornummer
         )
         {
             _leistungsempfängerMitDebitornummer = leistungsempfängerMitDebitornummer;
@@ -27,7 +25,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
                     .FirstOrDefault(bekannterLeistungsempfänger =>
                         bekannterLeistungsempfänger.Id == leistungsEmpfängerAufRechnung
                     )
-                    .DebitorNummer != 0;
+                    ?.Debitorennummer != 0;
 
             return Result.SuccessIf(
                 debitornummerFestgelegt,

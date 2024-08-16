@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Kunden;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
@@ -10,7 +11,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
         private readonly LeistungsempfängerHatDebitornummer _leistungsempfängerHatDebitornummerRegel;
 
         public AlleLeistungsempfängerRegeln(
-            IImmutableList<(string Id, int DebitorNummer)> leistungsempfängerMitDebitornummer
+            IImmutableList<Kunde> leistungsempfängerMitDebitornummer
         )
         {
             var bekannteLeistungsempfängerIds = leistungsempfängerMitDebitornummer

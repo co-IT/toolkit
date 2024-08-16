@@ -30,20 +30,10 @@ internal class InvoiceMapper
         _customers = customers;
         _accounts = accounts;
 
-        var leistungsempfängerMitDebitornummer = _customers
-            .Select(leistungsempfänger =>
-                (leistungsempfänger.Id, leistungsempfänger.Debitorennummer)
-            )
-            .ToImmutableList();
-
-        var kontoNummern = _accounts.Select(a => a.KontoNummer).ToImmutableHashSet();
-
-        var mitarbeiterNummern = mitarbeiter.Select(m => m.Nummer).ToImmutableHashSet();
-
         _rechnungsRegelen = new AlleRechnungsregeln(
-            leistungsempfängerMitDebitornummer,
-            kontoNummern,
-            mitarbeiterNummern
+            customers.ToImmutableList(),
+            accounts.ToImmutableList(),
+            mitarbeiter.ToImmutableList()
         );
     }
 

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using coIT.Clockodo.QuickActions.Einstellungen;
 using coIT.Libraries.Clockodo.TimeEntries;
+using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 using coIT.Libraries.ConfigurationManager;
 using coIT.Libraries.Datengrundlagen.Konten;
 using coIT.Libraries.Datengrundlagen.Kunden;
@@ -96,71 +97,47 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
 
         private async Task<Result<AlleRechnungsregeln>> RechnungsprüferErstellen()
         {
-            return await LeistungsempfängerMitDebitornummerLaden()
-                .BindZip((_) => BekannteKontonummernErhalten())
-                .BindZip((_, _) => AlleMitarbeiterIdsErhalten())
+            return await LeistungsempfängerLaden()
+                .BindZip((_) => BekannteKontenLaden())
+                .BindZip((_, _) => AlleMitarbeiterLaden())
                 .Map((tuple) => new AlleRechnungsregeln(tuple.First, tuple.Second, tuple.Third));
         }
 
-        private async Task<Result<ImmutableHashSet<int>>> AlleMitarbeiterIdsErhalten()
+        private async Task<Result<ImmutableList<Mitarbeiter>>> AlleMitarbeiterLaden()
         {
             return await MitarbeiterAusDateisystemLaden()
                 .BindZip((_) => MitarbeiterAusClockodoLaden())
-                .Map((tuple) => tuple.First.Concat(tuple.Second).ToImmutableHashSet());
+                .Map(
+                    (tuple) =>
+                        tuple.First.ClockodoMitarbeiterHinzufügen(tuple.Second).ToImmutableList()
+                );
         }
 
-        private async Task<Result<List<int>>> MitarbeiterAusClockodoLaden()
+        private async Task<Result<List<UserWithTeam>>> MitarbeiterAusClockodoLaden()
         {
-            var adminMitarbeiterId = 350599;
             return await _environmentManager
                 .Get<ClockodoEinstellungen>()
                 .Map((konfiguration) => new TimeEntriesService(konfiguration.ClockodoCredentials))
                 .Map((clockodoService) => clockodoService.GetAllUsers())
-                .Map(
-                    (clockodoNutzer) =>
-                        clockodoNutzer
-                            .Where(mitarbeiter => mitarbeiter.Id != adminMitarbeiterId)
-                            .Select(mitarbeiter => mitarbeiter.Number)
-                            .ToList()
-                )
-                .MapTry(
-                    (nummernListe) =>
-                        nummernListe.Select(nummer => int.Parse(nummer ?? "0")).ToList(),
-                    (_) => "Mitarbeiternummer im ungültigen Format gefunden"
-                );
+                .Map((mitarbeiter) => mitarbeiter.ToList());
         }
 
-        private async Task<Result<HashSet<int>>> MitarbeiterAusDateisystemLaden()
+        private async Task<Result<MitarbeiterListe>> MitarbeiterAusDateisystemLaden()
         {
-            var mitarbeiterListeErgebnis = await _fileSystemManager.Get<MitarbeiterListe>();
-
-            if (mitarbeiterListeErgebnis.IsFailure)
-                return mitarbeiterListeErgebnis.Map(_ => new HashSet<int>());
-
-            return mitarbeiterListeErgebnis
-                .Value.Select(mitarbeiter => mitarbeiter.Nummer)
-                .ToHashSet();
+            return await _fileSystemManager.Get<MitarbeiterListe>();
         }
 
-        private async Task<Result<ImmutableHashSet<int>>> BekannteKontonummernErhalten()
+        private async Task<Result<ImmutableList<KontoDetails>>> BekannteKontenLaden()
         {
-            var umsatzkontenErgebnis = await _fileSystemManager.Get<UmsatzkontenListe>();
-            return umsatzkontenErgebnis.Map(konten =>
-                konten.Select(konto => konto.KontoNummer).ToImmutableHashSet()
-            );
+            return await _fileSystemManager
+                .Get<UmsatzkontenListe>()
+                .Map(kontenliste => kontenliste.ToImmutableList());
         }
 
-        private async Task<
-            Result<ImmutableList<(string LeistungsempfängerId, int DebitorNummer)>>
-        > LeistungsempfängerMitDebitornummerLaden()
+        private async Task<Result<ImmutableList<Kunde>>> LeistungsempfängerLaden()
         {
-            var kundenStammErgebnis = await _fileSystemManager.Get<Kundenstamm>();
-            return kundenStammErgebnis.Map(kunden =>
-                kunden
-                    .Select(leistungsempfänger =>
-                        (leistungsempfänger.Id, leistungsempfänger.Debitorennummer)
-                    )
-                    .ToImmutableList()
+            return (await _fileSystemManager.Get<Kundenstamm>()).Map(kundenstamm =>
+                kundenstamm.ToImmutableList()
             );
         }
 

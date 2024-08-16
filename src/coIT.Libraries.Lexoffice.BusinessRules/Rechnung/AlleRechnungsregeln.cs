@@ -1,4 +1,7 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Konten;
+using coIT.Libraries.Datengrundlagen.Kunden;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger;
 using coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
@@ -14,12 +17,9 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
         private readonly AlleLeistungsempfängerRegeln _leistungsempfängerIstKorret;
 
         public AlleRechnungsregeln(
-            IImmutableList<(
-                string LeistungsempfängerId,
-                int DebitorNummer
-            )> leistungsempfängerMitDebitornummer,
-            IImmutableSet<int> bekannteKontonummern,
-            IImmutableSet<int> mitarbeiter
+            IImmutableList<Kunde> leistungsempfängerMitDebitornummer,
+            IImmutableList<KontoDetails> bekannteKontonummern,
+            IImmutableList<Mitarbeiter> mitarbeiter
         )
         {
             _rechungszeileRegeln = new AlleRechnungszeilenRegeln(bekannteKontonummern, mitarbeiter);

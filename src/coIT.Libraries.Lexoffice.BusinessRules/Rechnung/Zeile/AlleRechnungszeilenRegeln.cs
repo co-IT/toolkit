@@ -1,4 +1,6 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Konten;
+using coIT.Libraries.Datengrundlagen.Mitarbeiter;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
@@ -10,8 +12,8 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Zeile
         private readonly MitarbeiterMussBekanntSein _mitarbeiterBekanntRegel;
 
         public AlleRechnungszeilenRegeln(
-            IImmutableSet<int> bekannteKontonummern,
-            IImmutableSet<int> mitarbeiter
+            IImmutableList<KontoDetails> bekannteKontonummern,
+            IImmutableList<Mitarbeiter> mitarbeiter
         )
         {
             _kontoBekanntRegel = new KontoMussBekanntSein(bekannteKontonummern);
