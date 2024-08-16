@@ -15,8 +15,7 @@ public class LexofficeService : IInvoiceService
     private readonly HttpClient _client;
     private readonly Random _random = new();
 
-    private DateTime _lastRequest = DateTime.MinValue;
-
+    private static DateTime _lastRequest = DateTime.MinValue;
     private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public LexofficeService(string accessToken)
@@ -66,31 +65,12 @@ public class LexofficeService : IInvoiceService
 
     public async Task<IImmutableList<Invoice>> GetInvoicesAsync(IImmutableList<Voucher> vouchers)
     {
-        var invoices = new ConcurrentBag<Invoice>();
-        var lexofficeRateLimit = 500;
+        var invoices = new List<Invoice>();
 
         foreach (var voucher in vouchers)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-            while ((DateTime.Now - _lastRequest).TotalMilliseconds < lexofficeRateLimit)
-            {
-                await Task.Delay(10);
-            }
-
-            var retryPolicy = Policy
-                .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(
-                    10,
-                    retryAttempt => TimeSpan.FromMilliseconds(lexofficeRateLimit)
-                );
-
-            var neueInvoice = await retryPolicy.ExecuteAsync(
-                async () => await GetInvoiceAsync(voucher.Id).ConfigureAwait(false)
-            );
+            var neueInvoice = await GetInvoiceAsync(voucher.Id).ConfigureAwait(false);
             invoices.Add(neueInvoice);
-
-            _lastRequest = DateTime.Now;
-            _semaphore.Release();
         }
 
         return invoices.ToImmutableList();
@@ -113,11 +93,10 @@ public class LexofficeService : IInvoiceService
             size
         );
 
-        var response = await _client.GetAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        await Task.Delay(3000);
 
         return JsonConvert.DeserializeObject<VoucherResponseWrapper>(contents);
     }
@@ -144,11 +123,10 @@ public class LexofficeService : IInvoiceService
     {
         var uri = LexofficeApiAddressesBuilder.ContactsUri(page, size);
 
-        var response = await _client.GetAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        await Task.Delay(2000);
 
         return JsonConvert.DeserializeObject<ContactsResponseWrapper>(contents);
     }
@@ -204,11 +182,10 @@ public class LexofficeService : IInvoiceService
     {
         var uri = LexofficeApiAddressesBuilder.CountriesUri();
 
-        var response = await _client.GetAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        await Task.Delay(2000);
 
         return JsonConvert.DeserializeObject<List<CountryInformation>>(
             contents,
@@ -220,7 +197,7 @@ public class LexofficeService : IInvoiceService
     {
         var uri = LexofficeApiAddressesBuilder.InvoiceUri(id);
 
-        var response = await _client.GetAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -231,5 +208,29 @@ public class LexofficeService : IInvoiceService
         };
 
         return JsonConvert.DeserializeObject<Invoice>(contents, jsonSerializerSettings);
+    }
+
+    private async Task<HttpResponseMessage> GetWithRateLimitingAsync(string uri)
+    {
+        var lexofficeRateLimit = 500;
+
+        await _semaphore.WaitAsync().ConfigureAwait(false);
+        while ((DateTime.Now - _lastRequest).TotalMilliseconds < lexofficeRateLimit)
+        {
+            await Task.Delay(10);
+        }
+
+        var retryPolicy = Policy
+            .Handle<HttpRequestException>()
+            .WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromMilliseconds(lexofficeRateLimit));
+
+        var ergebnis = await retryPolicy.ExecuteAsync(
+            async () => await _client.GetAsync(uri).ConfigureAwait(false)
+        );
+
+        _lastRequest = DateTime.Now;
+        _semaphore.Release();
+
+        return ergebnis;
     }
 }
