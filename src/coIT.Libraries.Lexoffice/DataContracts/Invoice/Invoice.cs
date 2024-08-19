@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace coIT.Libraries.LexOffice.DataContracts.Invoice;
 
@@ -45,4 +45,6 @@ public class Invoice
 
     [JsonProperty("totalPrice")]
     public InvoiceTotalPrice TotalPrice { get; set; }
+
+    public InvoicePaymentConditions PaymentConditions { get; set; }
 }
