@@ -14,7 +14,7 @@ namespace coIT.Libraries.Datengrundlagen.Konten
         public bool IstAbrechenbar { get; set; }
         public string SteuerlicherHinweis { get; set; }
         public int Steuerschlüssel { get; set; }
-        public double Steuerrate { get; set; }
+        public decimal Steuerrate { get; set; }
 
         public override string ToString()
         {

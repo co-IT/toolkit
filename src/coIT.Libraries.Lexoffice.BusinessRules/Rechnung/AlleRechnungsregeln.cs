@@ -16,6 +16,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
         private readonly RechnungsnummerIstGültig _rechnungsnummerIstGültig;
         private readonly SteuerlicherHinweisAufRechnungGedruckt _rechnungEnhältKorrektenHinweis;
         private readonly AlleLeistungsempfängerRegeln _leistungsempfängerIstKorret;
+        private readonly UmsatzsteuersatzStimmtMitKontoÜberein _steuerrateIstKorrekt;
 
         public AlleRechnungsregeln(
             IImmutableList<Kunde> leistungsempfängerMitDebitornummer,
@@ -30,23 +31,29 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
             _leistungsempfängerIstKorret = new AlleLeistungsempfängerRegeln(
                 leistungsempfängerMitDebitornummer
             );
+            _steuerrateIstKorrekt = new UmsatzsteuersatzStimmtMitKontoÜberein(konten);
         }
 
         public Result Prüfen(Invoice rechnung)
         {
             var leistungsemfängerPrüfungErgebnis = _leistungsempfängerIstKorret.Prüfen(rechnung);
-            var rechnungspositionenGleichesKontoErgebnis = _allePositionenHabenGleichesKonto.Prüfen(
-                rechnung
-            );
+            var rechnungsPrüfungenDieAufKontoBasieren = _allePositionenHabenGleichesKonto
+                .Prüfen(rechnung)
+                .Bind(
+                    () =>
+                        Result.Combine(
+                            _rechnungEnhältKorrektenHinweis.Prüfen(rechnung),
+                            _steuerrateIstKorrekt.Prüfen(rechnung)
+                        )
+                );
+
             var rechnungsnummerGültigErgebnis = _rechnungsnummerIstGültig.Prüfen(rechnung);
-            var steuerlicherHinweisIstKorrekt = _rechnungEnhältKorrektenHinweis.Prüfen(rechnung);
 
             return Result.Combine(
                 ZeilenPrüfen(rechnung),
                 leistungsemfängerPrüfungErgebnis,
-                rechnungspositionenGleichesKontoErgebnis,
-                rechnungsnummerGültigErgebnis,
-                steuerlicherHinweisIstKorrekt
+                rechnungsPrüfungenDieAufKontoBasieren,
+                rechnungsnummerGültigErgebnis
             );
         }
 

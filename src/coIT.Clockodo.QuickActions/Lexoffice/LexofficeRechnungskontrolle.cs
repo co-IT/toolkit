@@ -82,7 +82,7 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
                 .MapTry(
                     (lexofficeService) => lexofficeService.GetInvoiceAsync(rechnungsId),
                     (_) =>
-                        $"Hast du den richtigen Rechnungslink kopiert?. Die Rechnung mit der ID {rechnungsId} konnte nicht gefunden werden."
+                        $"Hast du den richtigen Rechnungslink kopiert? Die Rechnung mit der ID {rechnungsId} konnte nicht gefunden werden."
                 )
                 .Ensure(
                     (invoice) => invoice is not null,

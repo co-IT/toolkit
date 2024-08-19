@@ -47,4 +47,6 @@ public class Invoice
     public InvoiceTotalPrice TotalPrice { get; set; }
 
     public InvoicePaymentConditions PaymentConditions { get; set; }
+
+    public List<InvoiceTaxAmount> TaxAmounts { get; set; }
 }
