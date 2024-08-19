@@ -2,7 +2,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules
 {
     internal class Kontoregeln
     {
-        public List<int> ErlaubteKontenFürKunden(int debitorNummer)
+        public static List<int> ErlaubteKontenFürKunden(int debitorNummer)
         {
             return debitorNummer switch
             {

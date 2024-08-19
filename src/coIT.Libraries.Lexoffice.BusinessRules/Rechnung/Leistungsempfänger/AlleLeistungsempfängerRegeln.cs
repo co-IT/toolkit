@@ -9,19 +9,21 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
     {
         private readonly LeistungsEmpfängerExistiert _leistungsempfängerExistiertRegel;
         private readonly LeistungsempfängerHatDebitornummer _leistungsempfängerHatDebitornummerRegel;
+        private readonly LeistungsempfängerNutztKorrektesKonto _leistungsempfängerKontoRegel;
 
         public AlleLeistungsempfängerRegeln(
             IImmutableList<Kunde> leistungsempfängerMitDebitornummer
         )
         {
-            var bekannteLeistungsempfängerIds = leistungsempfängerMitDebitornummer
-                .Select(l => l.Id)
-                .ToImmutableHashSet();
             _leistungsempfängerExistiertRegel = new LeistungsEmpfängerExistiert(
-                bekannteLeistungsempfängerIds
+                leistungsempfängerMitDebitornummer
             );
 
             _leistungsempfängerHatDebitornummerRegel = new LeistungsempfängerHatDebitornummer(
+                leistungsempfängerMitDebitornummer
+            );
+
+            _leistungsempfängerKontoRegel = new LeistungsempfängerNutztKorrektesKonto(
                 leistungsempfängerMitDebitornummer
             );
         }
@@ -30,7 +32,8 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
         {
             return _leistungsempfängerExistiertRegel
                 .Prüfen(rechnung)
-                .Bind(() => _leistungsempfängerHatDebitornummerRegel.Prüfen(rechnung));
+                .Bind(() => _leistungsempfängerHatDebitornummerRegel.Prüfen(rechnung))
+                .Bind(() => _leistungsempfängerKontoRegel.Prüfen(rechnung));
         }
     }
 }

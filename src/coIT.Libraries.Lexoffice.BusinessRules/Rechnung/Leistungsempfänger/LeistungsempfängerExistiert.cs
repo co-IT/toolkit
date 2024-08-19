@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using coIT.Libraries.Datengrundlagen.Kunden;
 using coIT.Libraries.LexOffice.DataContracts.Invoice;
 using CSharpFunctionalExtensions;
 
@@ -8,9 +9,11 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
     {
         private readonly IImmutableSet<string> _bekannteLeistungsempfänger;
 
-        public LeistungsEmpfängerExistiert(IImmutableSet<string> leistungsempfänger)
+        public LeistungsEmpfängerExistiert(IImmutableList<Kunde> leistungsempfängerMitDebitornummer)
         {
-            _bekannteLeistungsempfänger = leistungsempfänger;
+            _bekannteLeistungsempfänger = leistungsempfängerMitDebitornummer
+                .Select(l => l.Id)
+                .ToImmutableHashSet();
         }
 
         public Result Prüfen(Invoice rechnung)
