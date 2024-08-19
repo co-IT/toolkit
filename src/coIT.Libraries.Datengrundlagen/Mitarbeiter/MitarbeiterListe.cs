@@ -4,21 +4,33 @@ namespace coIT.Libraries.Datengrundlagen.Mitarbeiter
 {
     public class MitarbeiterListe : List<Mitarbeiter>
     {
-        public MitarbeiterListe ClockodoMitarbeiterHinzufügen(List<UserWithTeam> clockodoNutzer)
+        public MitarbeiterListe ClockodoMitarbeiterHinzufügen(List<UserWithTeam> clockodoBenutzer)
         {
-            var clockodoMitarbeiter = clockodoNutzer.Select(nutzer => new Mitarbeiter
-            {
-                Aktiv = nutzer.Active,
-                Name = nutzer.Name.Replace($"{nutzer.Number}:", ""),
-                Nummer = int.Parse(nutzer.Number ?? "0"),
-                Team = nutzer.Team
-            });
+            var adminNutzerId = 350599;
+            var clockodoMitarbeiter = clockodoBenutzer
+                .Where(user => user.Id != adminNutzerId)
+                .Select(ZuMitarbeiter)
+                .ToList();
 
             var liste = new MitarbeiterListe();
             liste.AddRange(this);
             liste.AddRange(clockodoMitarbeiter);
 
             return liste;
+        }
+
+        private static Mitarbeiter ZuMitarbeiter(UserWithTeam clockodoBenutzer)
+        {
+            var name = clockodoBenutzer.Name.Split(":")[1].Trim();
+            var nummer = clockodoBenutzer.Name.Split(":")[0].Trim();
+
+            return new Mitarbeiter()
+            {
+                Nummer = int.Parse(nummer),
+                Name = name,
+                Aktiv = clockodoBenutzer.Active,
+                Team = clockodoBenutzer.Team
+            };
         }
     }
 }
