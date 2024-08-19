@@ -228,6 +228,13 @@ namespace coIT.Clockodo.QuickActions.Einstellungen
                 Application.Exit();
             }
 
+            MessageBox.Show(
+                "Lexoffice Konfiguration erfolgreich gespeichert",
+                "Hinweis",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+
             return Result.Success();
         }
 
