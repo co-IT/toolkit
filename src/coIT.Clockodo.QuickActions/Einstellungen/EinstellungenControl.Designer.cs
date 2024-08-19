@@ -379,16 +379,16 @@ namespace coIT.Clockodo.QuickActions.Einstellungen
             groupBox5.Controls.Add(lnkOneDrive);
             groupBox5.Location = new Point(6, 354);
             groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(1130, 198);
+            groupBox5.Size = new Size(1130, 237);
             groupBox5.TabIndex = 11;
             groupBox5.TabStop = false;
             groupBox5.Text = "Anleitung";
             // 
             // label4
             // 
-            label4.Location = new Point(13, 150);
+            label4.Location = new Point(13, 187);
             label4.Name = "label4";
-            label4.Size = new Size(885, 69);
+            label4.Size = new Size(885, 50);
             label4.TabIndex = 6;
             label4.Text = "3. Nachdem die Synchronisierung aktiviert ist kannst du links die Pfade zu den Dateien angeben";
             // 
@@ -402,7 +402,7 @@ namespace coIT.Clockodo.QuickActions.Einstellungen
             // 
             // lnkOneDrive
             // 
-            lnkOneDrive.Location = new Point(41, 97);
+            lnkOneDrive.Location = new Point(41, 110);
             lnkOneDrive.Name = "lnkOneDrive";
             lnkOneDrive.Size = new Size(1024, 53);
             lnkOneDrive.TabIndex = 1;
