@@ -26,7 +26,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung
                 .Ensure(
                     steuerrate => rechnung.TaxAmounts.First().TaxRatePercentage == steuerrate,
                     steuerrate =>
-                        $"Es wird eine Steuerrate von {steuerrate} erwartet jedoch wurde {rechnung.TaxAmounts.First().TaxRatePercentage} gesetzt"
+                        $"Es wird eine Steuerrate von {steuerrate}% erwartet jedoch wurde {rechnung.TaxAmounts.First().TaxRatePercentage} gesetzt"
                 );
         }
     }
