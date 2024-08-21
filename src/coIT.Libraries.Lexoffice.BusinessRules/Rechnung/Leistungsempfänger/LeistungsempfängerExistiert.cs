@@ -18,7 +18,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
 
         public Result Prüfen(Invoice rechnung)
         {
-            var leistungsEmpfängerAufRechnung = rechnung.Address.ContactId;
+            var leistungsEmpfängerAufRechnungId = rechnung.Address.ContactId;
 
             var leistungsempfängerOderNull = _bekannteLeistungsempfänger.FirstOrDefault(
                 bekannterLeistungsempfänger =>
@@ -29,7 +29,7 @@ namespace coIT.Libraries.Lexoffice.BusinessRules.Rechnung.Leistungsempfänger
                 return Result.Success();
 
             return Result.Failure(
-                $"Mit der Leistungsempfänger ID {leistungsEmpfängerAufRechnung} konnte kein Leistungsempfänger verknüpft werden"
+                $"Der Leistungsempfägner mit dem Namen '{rechnung.Address.Name}' und der ID  '{leistungsEmpfängerAufRechnungId}' konnte keinem Leistungsempfänger zugeordnet werden. Überprüfe ob du den richtigen Kunden angegeben hast. Kontaktiere Uli, falls dies ein neurer Kunde ist."
             );
         }
     }
