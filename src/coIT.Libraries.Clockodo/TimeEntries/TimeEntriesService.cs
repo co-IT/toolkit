@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using coIT.Libraries.Clockodo.TimeEntries.Contracts;
 using coIT.Libraries.Clockodo.TimeEntries.Filter;
 using Newtonsoft.Json;
@@ -35,11 +35,12 @@ public class TimeEntriesService : ITimeEntriesService
 
     public async Task<IImmutableList<TimeEntry>> GetTimeEntriesAsync(
         ClockodoPeriod period,
-        int employee = 0
+        int employee = 0,
+        CancellationToken cancellationToken = default
     )
     {
-        var rawEntries = await GetRawTimeEntriesAsync(period, employee);
-        var customerList = await GetAllCustomers();
+        var rawEntries = await GetRawTimeEntriesAsync(period, employee, cancellationToken);
+        var customerList = await GetAllCustomers(cancellationToken);
 
         var runningEntryFilter = new RunningEntryFilter();
         var finishedRawEntries = runningEntryFilter.Filter(rawEntries);
@@ -55,13 +56,16 @@ public class TimeEntriesService : ITimeEntriesService
         return combinedEntries;
     }
 
-    public async Task<IEnumerable<UserReportDayWithUser>> GetDailyUserreports(ClockodoPeriod period)
+    public async Task<IEnumerable<UserReportDayWithUser>> GetDailyUserreports(
+        ClockodoPeriod period,
+        CancellationToken cancellationToken = default
+    )
     {
         var years = period.GetAllYearsInPeriod();
         var dailyReports = new List<UserReportDayWithUser>();
         foreach (var year in years)
         {
-            var userreports = await GetAllUserReports(year);
+            var userreports = await GetAllUserReports(year, cancellationToken);
             var dailyUserreports = userreports
                 .ToList()
                 .SelectMany(userreport =>
@@ -159,12 +163,14 @@ public class TimeEntriesService : ITimeEntriesService
     }
     #endregion
 
-    public async Task<IEnumerable<UserWithTeam>> GetAllUsers()
+    public async Task<IEnumerable<UserWithTeam>> GetAllUsers(
+        CancellationToken cancellationToken = default
+    )
     {
-        var teams = await GetAllTeams();
+        var teams = await GetAllTeams(cancellationToken);
         var noTeamTeam = new Team() { Id = 0, Name = "Kein Team" };
 
-        var rawUsers = await GetRawUsers();
+        var rawUsers = await GetRawUsers(cancellationToken);
         var usersWithTeam = rawUsers.Select(user =>
         {
             var team = teams.FirstOrDefault(team => team.Id == user.TeamId) ?? noTeamTeam;
@@ -176,7 +182,8 @@ public class TimeEntriesService : ITimeEntriesService
 
     private async Task<IImmutableList<RawTimeEntry>> GetRawTimeEntriesAsync(
         ClockodoPeriod period,
-        int employee = 0
+        int employee = 0,
+        CancellationToken cancellationToken = default
     )
     {
         var allTimeEntries = new List<RawTimeEntry>();
@@ -187,7 +194,7 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllEntriesUri(period, page, employee, true);
 
-            allEntriesOfPage = await GetAllAsync<TimeEntryWrapper>(uri);
+            allEntriesOfPage = await GetAllAsync<TimeEntryWrapper>(uri, cancellationToken);
             allTimeEntries.AddRange(allEntriesOfPage.Entries);
 
             page++;
@@ -196,7 +203,9 @@ public class TimeEntriesService : ITimeEntriesService
         return allTimeEntries.ToImmutableList();
     }
 
-    private async Task<IEnumerable<Customer>> GetAllCustomers()
+    private async Task<IEnumerable<Customer>> GetAllCustomers(
+        CancellationToken cancellationToken = default
+    )
     {
         var allTimeEntries = new List<Customer>();
         CustomersWrapper allEntriesOfPage;
@@ -206,7 +215,7 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllCustomersUri();
 
-            allEntriesOfPage = await GetAllAsync<CustomersWrapper>(uri);
+            allEntriesOfPage = await GetAllAsync<CustomersWrapper>(uri, cancellationToken);
             allTimeEntries.AddRange(allEntriesOfPage.Customers);
 
             page++;
@@ -215,34 +224,40 @@ public class TimeEntriesService : ITimeEntriesService
         return allTimeEntries.ToImmutableList();
     }
 
-    private async Task<IEnumerable<Team>> GetAllTeams()
+    private async Task<IEnumerable<Team>> GetAllTeams(CancellationToken cancellationToken = default)
     {
         var uri = ApiAdressesBuilder.AllTeamsUri();
-        var userreportWrapper = await GetAllAsync<TeamWrapper>(uri);
+        var userreportWrapper = await GetAllAsync<TeamWrapper>(uri, cancellationToken);
         return userreportWrapper.Teams;
     }
 
-    private async Task<IEnumerable<RawUser>> GetRawUsers()
+    private async Task<IEnumerable<RawUser>> GetRawUsers(
+        CancellationToken cancellationToken = default
+    )
     {
         var uri = ApiAdressesBuilder.AllUsersUri();
-        var userreportWrapper = await GetAllAsync<UsersWrapper>(uri);
+        var userreportWrapper = await GetAllAsync<UsersWrapper>(uri, cancellationToken);
         return userreportWrapper.Users;
     }
 
-    private async Task<IEnumerable<UserReport>> GetAllUserReports(int year)
+    private async Task<IEnumerable<UserReport>> GetAllUserReports(
+        int year,
+        CancellationToken cancellationToken = default
+    )
     {
         var uri = ApiAdressesBuilder.AllUserreportsUri(year);
-        var userreportWrapper = await GetAllAsync<UserReportWrapper>(uri);
+        var userreportWrapper = await GetAllAsync<UserReportWrapper>(uri, cancellationToken);
         return userreportWrapper.Userreports;
     }
 
     public async Task<IImmutableList<ChangeRequest>> GetAllChangeRequestsAsync(
         ClockodoPeriod period,
-        int employee = 0
+        int employee = 0,
+        CancellationToken cancellationToken = default
     )
     {
-        var rawChangeRequests = await GetAllRawChangeRequests(period, employee);
-        var users = await GetAllUsers();
+        var rawChangeRequests = await GetAllRawChangeRequests(period, employee, cancellationToken);
+        var users = await GetAllUsers(cancellationToken);
 
         return rawChangeRequests
             .Select(rawChangeRequest => new ChangeRequest(rawChangeRequest, users))
@@ -251,7 +266,8 @@ public class TimeEntriesService : ITimeEntriesService
 
     private async Task<IEnumerable<RawChangeRequest>> GetAllRawChangeRequests(
         ClockodoPeriod period,
-        int employee = 0
+        int employee = 0,
+        CancellationToken cancellationToken = default
     )
     {
         var allChangeRequests = new List<RawChangeRequest>();
@@ -262,7 +278,7 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllChangeRequestsUri(period, page, employee);
 
-            allEntriesOfPage = await GetAllAsync<ChangeRequestWrapper>(uri);
+            allEntriesOfPage = await GetAllAsync<ChangeRequestWrapper>(uri, cancellationToken);
             allChangeRequests.AddRange(allEntriesOfPage.ChangeRequests);
 
             page++;
@@ -271,11 +287,14 @@ public class TimeEntriesService : ITimeEntriesService
         return allChangeRequests;
     }
 
-    private async Task<T> GetAllAsync<T>(string route)
+    private async Task<T> GetAllAsync<T>(
+        string route,
+        CancellationToken cancellationToken = default
+    )
     {
-        var response = await _client.GetAsync(route);
+        var response = await _client.GetAsync(route, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
         var deserialized = JsonConvert.DeserializeObject<T>(content, _jsonSettings);
         return deserialized ?? default;
     }
