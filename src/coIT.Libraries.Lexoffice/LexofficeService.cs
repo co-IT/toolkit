@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using coIT.Libraries.LexOffice.DataContracts.Contacts;
 using coIT.Libraries.LexOffice.DataContracts.Country;
@@ -13,7 +12,6 @@ namespace coIT.Libraries.LexOffice;
 public class LexofficeService : IInvoiceService
 {
     private readonly HttpClient _client;
-    private readonly Random _random = new();
 
     private static DateTime _lastRequest = DateTime.MinValue;
     private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
@@ -30,9 +28,13 @@ public class LexofficeService : IInvoiceService
         };
     }
 
-    public async Task<ImmutableList<Voucher>> GetVouchersInPeriod(DateOnly start, DateOnly end)
+    public async Task<ImmutableList<Voucher>> GetVouchersInPeriod(
+        DateOnly start,
+        DateOnly end,
+        CancellationToken cancellationToken = default
+    )
     {
-        var lexOfficeVouchers = await GetAllInvoiceVouchersAsync();
+        var lexOfficeVouchers = await GetAllInvoiceVouchersAsync(cancellationToken);
 
         var vouchersInPeriod = lexOfficeVouchers
             .Where(voucher =>
@@ -43,7 +45,9 @@ public class LexofficeService : IInvoiceService
         return vouchersInPeriod;
     }
 
-    public async Task<IImmutableList<Voucher>> GetAllInvoiceVouchersAsync()
+    public async Task<IImmutableList<Voucher>> GetAllInvoiceVouchersAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         var vouchers = new List<Voucher>();
 
@@ -51,25 +55,31 @@ public class LexofficeService : IInvoiceService
         var status =
             VoucherStatus.Paid | VoucherStatus.Paidoff | VoucherStatus.Open | VoucherStatus.Voided;
 
-        var wrapper = await GetVouchersAsync(type, status).ConfigureAwait(false);
+        var wrapper = await GetVouchersAsync(type, status, 250, cancellationToken)
+            .ConfigureAwait(false);
         vouchers.AddRange(wrapper.Content);
 
         for (var page = 1; page < wrapper.TotalPages; page++)
         {
-            var pageWrapper = await GetVouchersAsync(type, status, page).ConfigureAwait(false);
+            var pageWrapper = await GetVouchersAsync(type, status, page, 250, cancellationToken)
+                .ConfigureAwait(false);
             vouchers.AddRange(pageWrapper.Content);
         }
 
         return vouchers.ToImmutableList();
     }
 
-    public async Task<IImmutableList<Invoice>> GetInvoicesAsync(IImmutableList<Voucher> vouchers)
+    public async Task<IImmutableList<Invoice>> GetInvoicesAsync(
+        IImmutableList<Voucher> vouchers,
+        CancellationToken cancellationToken = default
+    )
     {
         var invoices = new List<Invoice>();
 
         foreach (var voucher in vouchers)
         {
-            var neueInvoice = await GetInvoiceAsync(voucher.Id).ConfigureAwait(false);
+            var neueInvoice = await GetInvoiceAsync(voucher.Id, cancellationToken)
+                .ConfigureAwait(false);
             invoices.Add(neueInvoice);
         }
 
@@ -80,7 +90,8 @@ public class LexofficeService : IInvoiceService
         int type,
         int status,
         int page = 0,
-        int size = 250
+        int size = 250,
+        CancellationToken cancellationToken = default
     )
     {
         var voucherTypeString = VoucherType.FromValueToString(type).Replace(" ", "");
@@ -93,24 +104,28 @@ public class LexofficeService : IInvoiceService
             size
         );
 
-        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var contents = await response
+            .Content.ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return JsonConvert.DeserializeObject<VoucherResponseWrapper>(contents);
     }
 
-    public async Task<List<ContactInformation>> GetContactsAsync()
+    public async Task<List<ContactInformation>> GetContactsAsync(
+        CancellationToken cancellationToken = default
+    )
     {
         var contactInformation = new List<ContactInformation>();
 
-        var wrapper = await GetContactsAsync(0);
+        var wrapper = await GetContactsAsync(0, 250, cancellationToken);
         contactInformation.AddRange(wrapper.ContactInformation);
 
         for (var page = 1; page < wrapper.TotalPages; page++)
         {
-            var pageWrapper = await GetContactsAsync(page);
+            var pageWrapper = await GetContactsAsync(page, 250, cancellationToken);
             contactInformation.AddRange(pageWrapper.ContactInformation);
         }
 
@@ -119,14 +134,20 @@ public class LexofficeService : IInvoiceService
         return contactInformation;
     }
 
-    private async Task<ContactsResponseWrapper> GetContactsAsync(int page, int size = 250)
+    private async Task<ContactsResponseWrapper> GetContactsAsync(
+        int page,
+        int size = 250,
+        CancellationToken cancellationToken = default
+    )
     {
         var uri = LexofficeApiAddressesBuilder.ContactsUri(page, size);
 
-        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var contents = await response
+            .Content.ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return JsonConvert.DeserializeObject<ContactsResponseWrapper>(contents);
     }
@@ -145,9 +166,12 @@ public class LexofficeService : IInvoiceService
         address.Zip = ZipFix.AddLeadingZeroes(address.Zip, address.Countrycode);
     }
 
-    private async Task AddCountriesToContactAddresses(List<ContactInformation> contacts)
+    private async Task AddCountriesToContactAddresses(
+        List<ContactInformation> contacts,
+        CancellationToken cancellationToken = default
+    )
     {
-        var countries = await GetAllCountries();
+        var countries = await GetAllCountries(cancellationToken);
 
         AddCountriesToAddresses(
             contacts
@@ -178,14 +202,18 @@ public class LexofficeService : IInvoiceService
         contact.Country = countries.Single(country => country.Code == contact.Countrycode);
     }
 
-    public async Task<List<CountryInformation>> GetAllCountries()
+    public async Task<List<CountryInformation>> GetAllCountries(
+        CancellationToken cancellationToken = default
+    )
     {
         var uri = LexofficeApiAddressesBuilder.CountriesUri();
 
-        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var contents = await response
+            .Content.ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return JsonConvert.DeserializeObject<List<CountryInformation>>(
             contents,
@@ -193,14 +221,19 @@ public class LexofficeService : IInvoiceService
         );
     }
 
-    public async Task<Invoice> GetInvoiceAsync(string id)
+    public async Task<Invoice> GetInvoiceAsync(
+        string id,
+        CancellationToken cancellationToken = default
+    )
     {
         var uri = LexofficeApiAddressesBuilder.InvoiceUri(id);
 
-        var response = await GetWithRateLimitingAsync(uri).ConfigureAwait(false);
+        var response = await GetWithRateLimitingAsync(uri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var contents = await response
+            .Content.ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         var jsonSerializerSettings = new JsonSerializerSettings
         {
@@ -210,7 +243,10 @@ public class LexofficeService : IInvoiceService
         return JsonConvert.DeserializeObject<Invoice>(contents, jsonSerializerSettings);
     }
 
-    private async Task<HttpResponseMessage> GetWithRateLimitingAsync(string uri)
+    private async Task<HttpResponseMessage> GetWithRateLimitingAsync(
+        string uri,
+        CancellationToken cancellationToken = default
+    )
     {
         var lexofficeRateLimit = 500;
 
@@ -225,7 +261,7 @@ public class LexofficeService : IInvoiceService
             .WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromMilliseconds(lexofficeRateLimit));
 
         var ergebnis = await retryPolicy.ExecuteAsync(
-            async () => await _client.GetAsync(uri).ConfigureAwait(false)
+            async () => await _client.GetAsync(uri, cancellationToken).ConfigureAwait(false)
         );
 
         _lastRequest = DateTime.Now;
