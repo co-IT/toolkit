@@ -55,7 +55,7 @@ public class LexofficeService : IInvoiceService
         var status =
             VoucherStatus.Paid | VoucherStatus.Paidoff | VoucherStatus.Open | VoucherStatus.Voided;
 
-        var wrapper = await GetVouchersAsync(type, status, 250, cancellationToken)
+        var wrapper = await GetVouchersAsync(type, status, 0, 250, cancellationToken)
             .ConfigureAwait(false);
         vouchers.AddRange(wrapper.Content);
 
@@ -120,16 +120,20 @@ public class LexofficeService : IInvoiceService
     {
         var contactInformation = new List<ContactInformation>();
 
-        var wrapper = await GetContactsAsync(0, 250, cancellationToken);
+        var wrapper = await GetContactsAsync(0, 250, cancellationToken).ConfigureAwait(false);
+        ;
         contactInformation.AddRange(wrapper.ContactInformation);
 
         for (var page = 1; page < wrapper.TotalPages; page++)
         {
-            var pageWrapper = await GetContactsAsync(page, 250, cancellationToken);
+            var pageWrapper = await GetContactsAsync(page, 250, cancellationToken)
+                .ConfigureAwait(false);
+            ;
             contactInformation.AddRange(pageWrapper.ContactInformation);
         }
 
-        await AddCountriesToContactAddresses(contactInformation);
+        await AddCountriesToContactAddresses(contactInformation).ConfigureAwait(false);
+        ;
         FixIncorrectlyFormattedZips(contactInformation);
         return contactInformation;
     }
@@ -171,7 +175,7 @@ public class LexofficeService : IInvoiceService
         CancellationToken cancellationToken = default
     )
     {
-        var countries = await GetAllCountries(cancellationToken);
+        var countries = await GetAllCountries(cancellationToken).ConfigureAwait(false);
 
         AddCountriesToAddresses(
             contacts
