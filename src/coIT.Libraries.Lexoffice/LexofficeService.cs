@@ -71,16 +71,21 @@ public class LexofficeService : IInvoiceService
 
     public async Task<IImmutableList<Invoice>> GetInvoicesAsync(
         IImmutableList<Voucher> vouchers,
+        IProgress<float>? progress = null,
         CancellationToken cancellationToken = default
     )
     {
         var invoices = new List<Invoice>();
+        var totalTodo = (float)vouchers.Count;
 
-        foreach (var voucher in vouchers)
+        for (var voucherNumber = 1; voucherNumber < vouchers.Count; voucherNumber++)
         {
+            var voucher = vouchers[voucherNumber];
             var neueInvoice = await GetInvoiceAsync(voucher.Id, cancellationToken)
                 .ConfigureAwait(false);
             invoices.Add(neueInvoice);
+
+            progress?.Report((voucherNumber + 1) / totalTodo);
         }
 
         return invoices.ToImmutableList();
@@ -121,19 +126,19 @@ public class LexofficeService : IInvoiceService
         var contactInformation = new List<ContactInformation>();
 
         var wrapper = await GetContactsAsync(0, 250, cancellationToken).ConfigureAwait(false);
-        ;
+
         contactInformation.AddRange(wrapper.ContactInformation);
 
         for (var page = 1; page < wrapper.TotalPages; page++)
         {
             var pageWrapper = await GetContactsAsync(page, 250, cancellationToken)
                 .ConfigureAwait(false);
-            ;
+
             contactInformation.AddRange(pageWrapper.ContactInformation);
         }
 
         await AddCountriesToContactAddresses(contactInformation).ConfigureAwait(false);
-        ;
+
         FixIncorrectlyFormattedZips(contactInformation);
         return contactInformation;
     }

@@ -43,7 +43,7 @@ namespace coIT.Lexoffice.GdiExport.Umsatzkonten
             KontoDetails.IstAbrechenbar = cb_IstAbrechenbar.Checked;
             KontoDetails.SteuerlicherHinweis = ctrl_SteuerlicherHinweis.Text;
             KontoDetails.Steuerschlüssel = (int)nbx_Steuerschlüssel.Value;
-            KontoDetails.Steuerrate = (double)nbx_Steuerrate.Value;
+            KontoDetails.Steuerrate = (decimal)nbx_Steuerrate.Value;
         }
 
         private void ctrl_Speichern_Click(object sender, EventArgs e)

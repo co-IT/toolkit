@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using coIT.Clockodo.QuickActions;
 using coIT.Lexoffice.GdiExport.Helpers;
 using coIT.Lexoffice.GdiExport.Kundenstamm;
 using coIT.Lexoffice.GdiExport.Umsatzkontenprüfung;
@@ -351,7 +352,18 @@ public partial class MainForm : Form
     {
         var vouchersInPeriod = await _lexofficeService.GetVouchersInPeriod(start, end);
 
-        return await _lexofficeService.GetInvoicesAsync(vouchersInPeriod);
+        var progress = new Progress<float>();
+        var getInvoicesTask = _lexofficeService.GetInvoicesAsync(vouchersInPeriod, progress);
+
+        Enabled = false;
+
+        var ladeForm = new LadeForm(progress, "Rechnungen werden abgefragt");
+        ladeForm.Show();
+
+        var ergebnis = await getInvoicesTask;
+        Enabled = true;
+
+        return ergebnis;
     }
 
     private async Task<(
