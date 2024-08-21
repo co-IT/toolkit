@@ -59,9 +59,10 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
         {
             if (rechnungPrüfungsErgebnis.IsFailure)
             {
-                lblErgebnisse.Text =
-                    $"Die Prüfung ist wegen folgenden Fehlern fehlgeschlagen: {Environment.NewLine}    "
-                    + rechnungPrüfungsErgebnis.Error.Replace(", ", $"{Environment.NewLine}    ");
+                lblErgebnisse.Text = rechnungPrüfungsErgebnis.Error.Replace(
+                    ", ",
+                    $"{Environment.NewLine}"
+                );
                 return;
             }
 

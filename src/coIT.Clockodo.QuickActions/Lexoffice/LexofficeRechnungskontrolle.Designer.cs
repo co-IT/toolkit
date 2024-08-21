@@ -31,9 +31,9 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             tbxRechnungUrl = new TextBox();
             btnRechnungPrüfen = new Button();
             groupBox1 = new GroupBox();
+            label1 = new Label();
             groupBox2 = new GroupBox();
             lblErgebnisse = new Label();
-            label1 = new Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -75,6 +75,15 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             groupBox1.TabStop = false;
             groupBox1.Text = "Url der zu prüfenden Rechnung einfügen";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(31, 46);
+            label1.Name = "label1";
+            label1.Size = new Size(554, 23);
+            label1.TabIndex = 2;
+            label1.Text = "Bitte stelle sicher, dass die Rechnung zuerst zwischengespeichert wurde";
+            // 
             // groupBox2
             // 
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -91,20 +100,11 @@ namespace coIT.Clockodo.QuickActions.Lexoffice
             // lblErgebnisse
             // 
             lblErgebnisse.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblErgebnisse.Location = new Point(8, 50);
+            lblErgebnisse.Location = new Point(31, 38);
             lblErgebnisse.Margin = new Padding(4, 0, 4, 0);
             lblErgebnisse.Name = "lblErgebnisse";
-            lblErgebnisse.Size = new Size(1092, 282);
+            lblErgebnisse.Size = new Size(1069, 282);
             lblErgebnisse.TabIndex = 0;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(31, 46);
-            label1.Name = "label1";
-            label1.Size = new Size(554, 23);
-            label1.TabIndex = 2;
-            label1.Text = "Bitte stelle sicher, dass die Rechnung zuerst zwischengespeichert wurde";
             // 
             // LexofficeRechnungskontrolle
             // 
