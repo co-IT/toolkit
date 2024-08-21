@@ -39,8 +39,9 @@ public class TimeEntriesService : ITimeEntriesService
         CancellationToken cancellationToken = default
     )
     {
-        var rawEntries = await GetRawTimeEntriesAsync(period, employee, cancellationToken);
-        var customerList = await GetAllCustomers(cancellationToken);
+        var rawEntries = await GetRawTimeEntriesAsync(period, employee, cancellationToken)
+            .ConfigureAwait(false);
+        var customerList = await GetAllCustomers(cancellationToken).ConfigureAwait(false);
 
         var runningEntryFilter = new RunningEntryFilter();
         var finishedRawEntries = runningEntryFilter.Filter(rawEntries);
@@ -65,7 +66,8 @@ public class TimeEntriesService : ITimeEntriesService
         var dailyReports = new List<UserReportDayWithUser>();
         foreach (var year in years)
         {
-            var userreports = await GetAllUserReports(year, cancellationToken);
+            var userreports = await GetAllUserReports(year, cancellationToken)
+                .ConfigureAwait(false);
             var dailyUserreports = userreports
                 .ToList()
                 .SelectMany(userreport =>
@@ -167,10 +169,10 @@ public class TimeEntriesService : ITimeEntriesService
         CancellationToken cancellationToken = default
     )
     {
-        var teams = await GetAllTeams(cancellationToken);
+        var teams = await GetAllTeams(cancellationToken).ConfigureAwait(false);
         var noTeamTeam = new Team() { Id = 0, Name = "Kein Team" };
 
-        var rawUsers = await GetRawUsers(cancellationToken);
+        var rawUsers = await GetRawUsers(cancellationToken).ConfigureAwait(false);
         var usersWithTeam = rawUsers.Select(user =>
         {
             var team = teams.FirstOrDefault(team => team.Id == user.TeamId) ?? noTeamTeam;
@@ -194,7 +196,8 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllEntriesUri(period, page, employee, true);
 
-            allEntriesOfPage = await GetAllAsync<TimeEntryWrapper>(uri, cancellationToken);
+            allEntriesOfPage = await GetAllAsync<TimeEntryWrapper>(uri, cancellationToken)
+                .ConfigureAwait(false);
             allTimeEntries.AddRange(allEntriesOfPage.Entries);
 
             page++;
@@ -215,7 +218,8 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllCustomersUri();
 
-            allEntriesOfPage = await GetAllAsync<CustomersWrapper>(uri, cancellationToken);
+            allEntriesOfPage = await GetAllAsync<CustomersWrapper>(uri, cancellationToken)
+                .ConfigureAwait(false);
             allTimeEntries.AddRange(allEntriesOfPage.Customers);
 
             page++;
@@ -227,7 +231,8 @@ public class TimeEntriesService : ITimeEntriesService
     private async Task<IEnumerable<Team>> GetAllTeams(CancellationToken cancellationToken = default)
     {
         var uri = ApiAdressesBuilder.AllTeamsUri();
-        var userreportWrapper = await GetAllAsync<TeamWrapper>(uri, cancellationToken);
+        var userreportWrapper = await GetAllAsync<TeamWrapper>(uri, cancellationToken)
+            .ConfigureAwait(false);
         return userreportWrapper.Teams;
     }
 
@@ -236,7 +241,8 @@ public class TimeEntriesService : ITimeEntriesService
     )
     {
         var uri = ApiAdressesBuilder.AllUsersUri();
-        var userreportWrapper = await GetAllAsync<UsersWrapper>(uri, cancellationToken);
+        var userreportWrapper = await GetAllAsync<UsersWrapper>(uri, cancellationToken)
+            .ConfigureAwait(false);
         return userreportWrapper.Users;
     }
 
@@ -246,7 +252,8 @@ public class TimeEntriesService : ITimeEntriesService
     )
     {
         var uri = ApiAdressesBuilder.AllUserreportsUri(year);
-        var userreportWrapper = await GetAllAsync<UserReportWrapper>(uri, cancellationToken);
+        var userreportWrapper = await GetAllAsync<UserReportWrapper>(uri, cancellationToken)
+            .ConfigureAwait(false);
         return userreportWrapper.Userreports;
     }
 
@@ -256,8 +263,9 @@ public class TimeEntriesService : ITimeEntriesService
         CancellationToken cancellationToken = default
     )
     {
-        var rawChangeRequests = await GetAllRawChangeRequests(period, employee, cancellationToken);
-        var users = await GetAllUsers(cancellationToken);
+        var rawChangeRequests = await GetAllRawChangeRequests(period, employee, cancellationToken)
+            .ConfigureAwait(false);
+        var users = await GetAllUsers(cancellationToken).ConfigureAwait(false);
 
         return rawChangeRequests
             .Select(rawChangeRequest => new ChangeRequest(rawChangeRequest, users))
@@ -278,7 +286,8 @@ public class TimeEntriesService : ITimeEntriesService
         {
             var uri = ApiAdressesBuilder.AllChangeRequestsUri(period, page, employee);
 
-            allEntriesOfPage = await GetAllAsync<ChangeRequestWrapper>(uri, cancellationToken);
+            allEntriesOfPage = await GetAllAsync<ChangeRequestWrapper>(uri, cancellationToken)
+                .ConfigureAwait(false);
             allChangeRequests.AddRange(allEntriesOfPage.ChangeRequests);
 
             page++;
@@ -292,9 +301,11 @@ public class TimeEntriesService : ITimeEntriesService
         CancellationToken cancellationToken = default
     )
     {
-        var response = await _client.GetAsync(route, cancellationToken);
+        var response = await _client.GetAsync(route, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+        var content = await response
+            .Content.ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
         var deserialized = JsonConvert.DeserializeObject<T>(content, _jsonSettings);
         return deserialized ?? default;
     }
