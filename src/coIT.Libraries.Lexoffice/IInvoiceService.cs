@@ -10,6 +10,7 @@ public interface IInvoiceService
 
     Task<IImmutableList<Invoice>> GetInvoicesAsync(
         IImmutableList<Voucher> vouchers,
-        CancellationToken cancellationToken
+        IProgress<float>? progress = null,
+        CancellationToken cancellationToken = default
     );
 }

@@ -22,6 +22,11 @@
     <ProjectReference Include="..\coIT.Libraries.WinForms\coIT.Libraries.WinForms.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="LadeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="cache_kunden.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
