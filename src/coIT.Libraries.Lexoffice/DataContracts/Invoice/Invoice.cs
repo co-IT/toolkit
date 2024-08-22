@@ -49,4 +49,6 @@ public class Invoice
     public InvoicePaymentConditions PaymentConditions { get; set; }
 
     public List<InvoiceTaxAmount> TaxAmounts { get; set; }
+
+    public string? Remark { get; set; }
 }
