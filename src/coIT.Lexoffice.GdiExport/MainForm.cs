@@ -396,7 +396,7 @@ public partial class MainForm : Form
             else
             {
                 var alleFehlerDieserRechnung = invoiceMappingErgebnis.Error.Split(", ");
-
+                errors.Add(invoice.VoucherNumber);
                 foreach (var fehler in alleFehlerDieserRechnung)
                     lview_ErkannteFehler.Items.Add($"{invoice.VoucherNumber} - {fehler}");
             }
