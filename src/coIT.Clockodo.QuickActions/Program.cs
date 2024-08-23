@@ -26,7 +26,6 @@ namespace coIT.Clockodo.QuickActions
             var updaterPfad = ErwarteterPfadFürUpdater();
             if (File.Exists(updaterPfad))
             {
-
                 Process process = Process.Start(updaterPfad);
                 process.WaitForExit();
                 var code = process.ExitCode;
@@ -43,8 +42,15 @@ namespace coIT.Clockodo.QuickActions
         public static string ErwarteterPfadFürUpdater()
         {
 #if DEBUG
-            var appdataOrdner = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return Path.Combine(appdataOrdner, "co-IT.eu GmbH", "Clockodo QuickActions", "updater.exe");
+            var appdataOrdner = Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData
+            );
+            return Path.Combine(
+                appdataOrdner,
+                "co-IT.eu GmbH",
+                "Clockodo QuickActions",
+                "updater.exe"
+            );
 #else
             return Path.Combine(Application.StartupPath, "..", "updater.exe");
 #endif

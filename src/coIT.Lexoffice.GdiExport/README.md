@@ -1,0 +1,1 @@
+Wurde nach [https://github.com/co-IT/coIT.Toolkit.Lexoffice.GdiExport](https://github.com/co-IT/coIT.Toolkit.Lexoffice.GdiExport) verschoben
