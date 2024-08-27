@@ -1,9 +1,0 @@
-﻿{
-  "Files": [
-    {
-      "Path": "config/timecard-mapping/timecard-mapping-settings-Standardkonfiguration.json",
-      "Name": "Standardkonfiguration"
-    }
-  ],
-  "BasePath": "config/timecard-mapping"
-}

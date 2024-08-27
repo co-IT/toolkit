@@ -1,9 +1,0 @@
-﻿{
-  "Files": [
-    {
-      "Path": "config/clockodo-mapping/clockodo-mapping-settings-Standardkonfiguration.json",
-      "Name": "Standardkonfiguration"
-    }
-  ],
-  "BasePath": "config/clockodo-mapping/"
-}
