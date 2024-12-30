@@ -57,7 +57,7 @@ Func<Absence, string> ausgabeFehlzeit = abwesenheit =>
         : text;
 };
 
-var year = 2023;
+var year = 2024;
 var start = new DateTime(year, 01, 01);
 var end = new DateTime(year, 12, 31);
 var periodFilter = ClockodoPeriodFilter.Create(start, end).Value;
@@ -190,6 +190,7 @@ foreach (var employee in employees)
     }
 }
 
+Console.WriteLine("Fertig!");
 Console.ReadKey();
 
 
